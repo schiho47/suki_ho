@@ -1,0 +1,20 @@
+.container{
+    margin-bottom: 2rem;
+    h1{
+        color:#aa978e;
+    }
+    li{
+        color: #aa978e;
+        .block{
+            h3{
+                color:#aa978e;
+            }
+            p{
+                color: black;
+                span{
+                    color:#aa978e;
+                }
+            }
+        }
+    }
+}

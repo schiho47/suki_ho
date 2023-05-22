@@ -1,0 +1,99 @@
+.container {
+  padding: 0 2rem;
+}
+
+.main {
+  min-height: 100vh;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  background-image: url('../public/images/cover.jpg');
+  background-position: 60%;
+  .hello{
+    width:50%;
+    background-color: rgba(255,255,255,.9);
+    position: absolute;
+    right: 2%;
+    padding: 1rem;
+    h1{
+      font-size: 68px;
+    }
+    h2{
+      font-size: 48px;
+    }
+    h3{
+      color: #CAB09B;
+      font-size: 40px;
+    }
+  }
+  .code{
+    position: absolute;
+    top:20%;
+    left: 50%;
+    transform: rotate(-10deg);
+  }
+  .baseball{
+    position: absolute;
+    bottom:30%;
+    right: 7%;
+    transform: rotate(20deg);
+  }
+
+  .image{
+    z-index: -1;
+    position: relative;
+    .back{
+      position: absolute;
+      transform: translateX(-25%);
+      width:550px;
+      height:500px;
+      border-radius: 10px;
+      background-color: #CAB09B;
+      // background-image: url('../public/images/code.png');
+    }
+    img{
+      transform: translateY(10%);
+    }
+  }
+}
+
+
+.description {
+  margin: 4rem 0;
+  line-height: 1.5;
+  font-size: 1.5rem;
+}
+
+
+.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
+
+
+@media (max-width: 600px) {
+  .grid {
+    width: 100%;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .card,
+  .footer {
+    border-color: #222;
+  }
+  .code {
+    background: #111;
+  }
+  .logo img {
+    filter: invert(1);
+  }
+}
