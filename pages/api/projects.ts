@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { projects } from 'data/projects/projects'
-type Data = {title:string,description:string,link:string}[]
+import type { NextApiRequest, NextApiResponse } from "next";
+import { projects } from "data/projects";
+type Data = { title: string; description: string; link: string }[];
 
 export default function handler(
   req: NextApiRequest,

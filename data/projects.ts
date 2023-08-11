@@ -12,5 +12,17 @@ export const projects=[
         description:'寫一台計算機，鍛鍊基本功，使用react.js 寫成。',
         link:'https://ho47-calculator.vercel.app/'
     },
+    {
+        title:'剪刀、石頭、布',
+        img:'/images/projects/rock-paper-scissors.png',
+        description:'電腦隨機出拳，和電腦對決，使用react.js 寫成。',
+        link:'https://ho47-rock-paper-scissors.vercel.app/'
+    },
+    {
+        title:'Memory Game',
+        img:'/images/projects/memory-game.png',
+        description:'十秒內，6種組合，你能記得幾組動物呢？使用react.js 寫成。',
+        link:'https://ho47-memory-game.vercel.app/'
+    },
 ]
 

@@ -1,0 +1,24 @@
+.container {
+  min-height: 100vh;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 0;
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 8rem;
+  h1{
+    margin: 10rem auto 3rem auto ;
+    width: 95%;
+  }
+  .content{
+    div{
+      width: 90%;
+      margin: 1rem auto;
+    }
+  }
+  .reference{
+    width: 90%;
+    margin: 1rem auto;
+    margin-top: 3rem;
+  }
+}
