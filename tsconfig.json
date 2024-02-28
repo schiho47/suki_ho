@@ -8,7 +8,11 @@
       "@styles/*": ["styles/*"],
       "@customTypes/*": ["types/*"],
       "@utils/*": ["utils/*"],
-      "@enums/*": ["enums/*"]
+      "@enums/*": ["enums/*"],
+      "@lib/*": ["lib/*"],
+      "@public/*": ["public/*"],
+      "@data/*": ["data/*"],
+      "@type/*": ["type/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

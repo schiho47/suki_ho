@@ -1,72 +1,73 @@
 .container {
   padding: 0 2rem;
+  background-color: #a4a5aa;
 }
 
 .main {
   min-height: 100vh;
+  width: 80%;
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  background-image: url('../public/images/cover.jpg');
-  background-position: 60%;
-  .hello{
-    width:50%;
-    background-color: rgba(255,255,255,.9);
+  margin: 2rem auto;
+
+  .hello {
+    width: 50%;
+    background-color: #33006e;
     position: absolute;
     right: 2%;
     padding: 1rem;
-    h1{
+    color: #ffffff;
+    h1 {
       font-size: 68px;
+      -webkit-text-stroke: 2px #a4a5aa;
     }
-    h2{
+    h2 {
       font-size: 48px;
+      -webkit-text-stroke: 2px #a4a5aa;
     }
-    h3{
-      color: #CAB09B;
+    h3 {
       font-size: 40px;
+      font-family: Microsoft JhengHei;
     }
   }
-  .code{
+  .code {
     position: absolute;
-    top:20%;
+    top: 20%;
     left: 50%;
     transform: rotate(-10deg);
   }
-  .baseball{
+  .baseball {
     position: absolute;
-    bottom:30%;
+    bottom: 30%;
     right: 7%;
     transform: rotate(20deg);
   }
 
-  .image{
+  .image {
     z-index: -1;
     position: relative;
-    .back{
+    .back {
       position: absolute;
       transform: translateX(-25%);
-      width:550px;
-      height:500px;
+      width: 550px;
+      height: 500px;
       border-radius: 10px;
-      background-color: #CAB09B;
+      background-color: #cab09b;
       // background-image: url('../public/images/code.png');
     }
-    img{
+    img {
       transform: translateY(10%);
     }
   }
 }
-
 
 .description {
   margin: 4rem 0;
   line-height: 1.5;
   font-size: 1.5rem;
 }
-
 
 .grid {
   display: flex;
@@ -75,8 +76,6 @@
   flex-wrap: wrap;
   max-width: 800px;
 }
-
-
 
 @media (max-width: 600px) {
   .grid {

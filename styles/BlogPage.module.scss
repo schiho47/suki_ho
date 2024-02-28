@@ -6,19 +6,40 @@
   width: 95%;
   margin: 0 auto;
   margin-top: 8rem;
-  h1{
-    margin: 10rem auto 3rem auto ;
+  h1 {
+    margin: 10rem auto 3rem auto;
     width: 95%;
   }
-  .content{
-    div{
+  .content {
+    .html {
       width: 90%;
       margin: 1rem auto;
     }
+    img {
+      margin: 1rem auto;
+      max-width: 700px;
+      height: auto;
+      object-fit: contain;
+    }
+    p {
+      margin: 1rem auto;
+    }
+    h2 {
+      margin: 2rem auto;
+    }
+    a {
+      color: rgb(71, 88, 221);
+    }
   }
-  .reference{
+  .reference {
     width: 90%;
-    margin: 1rem auto;
+    margin: 1.5rem auto;
     margin-top: 3rem;
+    li {
+      margin: 10px 0;
+    }
+    a {
+      color: rgb(71, 88, 221);
+    }
   }
 }

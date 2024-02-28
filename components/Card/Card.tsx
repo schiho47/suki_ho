@@ -46,11 +46,11 @@ const Card: React.FC<CardProps> = ({
         )}
         <div className={`${img ? "col-md-6" : "col-md-12"}`}>
           <div className="card-body">
-            <h3 className="card-title" style={{ color: "#aa978e" }}>
+            <h3 className="card-title" style={{ color: "#33006E" }}>
               <Link href={link}>
                 <a
                   target={linkOpenType}
-                  style={{ color: "#aa978e", textDecoration: "none" }}
+                  style={{ color: "#33006E", textDecoration: "none" }}
                 >
                   {title}
                 </a>
