@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+'use client';
+
+import { useState } from 'react';
 import styles from './Navbar.module.scss';
 import Link from 'next/link';
 interface NavbarProp {
@@ -26,38 +28,39 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
       className={`navbar navbar-expand-lg  position-fixed top-0 start-0  z-3  ${styles.container}`}
     >
       <div className='container-fluid'>
-        <Link href='/'>
-          <a className='navbar-brand text-white'>Suki Ho</a>
+        <Link href='/' className='navbar-brand text-primary-color'>
+          Suki Ho
         </Link>
         <button
           className='navbar-toggler'
           type='button'
           data-bs-toggle='collapse'
-          data-bs-target='#navbarNavAltMarkup'
-          aria-controls='navbarNavAltMarkup'
+          data-bs-target='#navbarNav'
+          aria-controls='navbarNav'
           aria-expanded='false'
           aria-label='Toggle navigation'
         >
           <span className='navbar-toggler-icon'></span>
         </button>
         <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
-          <div className='navbar-nav'>
+          <ul className='navbar-nav'>
             {content.map((item) => {
               return (
-                <Link href={item.href}>
-                  <a
+                <li className='nav-item'>
+                  <Link
+                    href={item.href}
                     className={`nav-link ${
-                      path === item.path ? styles.active : null
+                      path === item.path ? styles.active : styles.inactive
                     }`}
                     aria-current='page'
-                    style={{ color: 'white' }}
+                   
                   >
                     {item.name}
-                  </a>
-                </Link>
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
         {/* <div className={`${styles.dropdown}`}>
           <i className="bi bi-translate" onClick={toggleLanguage} />

@@ -1,13 +1,19 @@
+@import '@styles/variables.scss';
 .container {
   min-height: 100vh;
   position: relative;
   z-index: 0;
-  width: 95%;
   margin: 0 auto;
   margin-top: 8rem;
+  background-color: $primary-white;
+  padding: 0 2rem;
+
+  .blogsContainer {
+    padding-bottom: 2rem;
+  }
   h1,
   hr {
-    color: #33006E;
+    color: $primary-color;
     margin-bottom: 2rem;
   }
 }

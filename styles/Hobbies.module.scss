@@ -1,3 +1,4 @@
+@import '@styles/variables.scss';
 .container {
   min-height: 100vh;
   position: relative;
@@ -7,7 +8,7 @@
   margin-top: 8rem;
   h1,
   hr {
-    color: #33006E;
+    color: $primary-color;
     margin-bottom: 2rem;
   }
 }

@@ -1,0 +1,43 @@
+@import '@styles/variables.scss';
+.card {
+  margin-bottom: 1rem;
+  border: 1px solid $primary-light-gold;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.imageWrapper {
+  margin-top: 1.5rem;
+}
+
+.cardTitle {
+  color: $primary-color;
+}
+.card-body {
+  background-color: $primary-white;
+}
+
+.cardImage {
+  object-fit: fill;
+}
+
+.linkBlock {
+  text-align: right;
+  width: 97%;
+}
+
+.linkBlockWithImage {
+  height: 30px;
+  margin: -1rem 10px 10px 0;
+}
+
+.linkBlockNoImage {
+  position: absolute;
+  bottom: 20px;
+  right: 50px;
+}

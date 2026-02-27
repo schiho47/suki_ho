@@ -1,12 +1,13 @@
-// #aa978e
+@import '@styles/variables.scss';
 .container {
-  background-color: #181818;
+  background-color: $primary-white;
   height: 80px;
   width: 100%;
+  padding-left: 1rem;
   position: relative;
   z-index: 2;
   i {
-    color: #ffffff;
+    color: $primary-color;
     font-size: 24px;
   }
   .dropdown {
@@ -14,13 +15,13 @@
     margin-right: 2rem;
     cursor: pointer;
     ul {
-      background-color: #33006e;
+      background-color: $primary-white;
       padding: 1rem;
       text-decoration: none;
       position: absolute;
       left: -20px;
       border-radius: 10px;
-      color: #ffffff;
+      color: $primary-color;
       li {
         list-style: none;
         &:hover {
@@ -31,6 +32,9 @@
   }
 }
 
+.inactive {
+  color: $primary-color;
+}
 .active {
   font-weight: bold;
   background-color: rgba(255, 255, 255, 0.2);

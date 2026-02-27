@@ -1,0 +1,216 @@
+@import '@styles/variables.scss';
+
+.container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.imageStack {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.imageStack::before,
+.imageStack::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.06);
+  z-index: -2;
+  transform: rotate(-4deg);
+}
+
+.imageStack::after {
+  top: 20px;
+  left: 20px;
+  z-index: -3;
+  transform: rotate(3deg);
+  opacity: 0.9;
+}
+
+.image {
+  position: relative;
+  z-index: 3;
+  object-fit: contain;
+  transform: rotate3d(1, 1, 0.5, -5deg);
+  background-color: white;
+  height: 60%;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.18),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.image:hover {
+  transform: rotate3d(1, 1, 0.5, -5deg) translateY(-4px);
+  box-shadow:
+    0 18px 32px rgba(0, 0, 0, 0.2),
+    0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.temple {
+  position: absolute;
+  left: 12%;
+  bottom: -18%;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: white;
+  z-index: 1;
+  opacity: 0.9;
+  transform: rotate(20deg);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.18));
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.imageStack:hover .temple {
+  transform: translateY(6px) rotate(20deg);
+  opacity: 1;
+}
+
+.vietnam {
+  position: absolute;
+  right: 6%;
+  top: -10%;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: white;
+  z-index: 2;
+  opacity: 0.85;
+  transform: rotate(6deg);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.16));
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.imageStack:hover .vietnam {
+  transform: translateY(-4px) rotate(6deg);
+  opacity: 1;
+}
+
+.me {
+  position: absolute;
+  left: -6%;
+  top: 8%;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: white;
+  z-index: 2;
+  opacity: 0.9;
+  transform: rotate(-8deg);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.16));
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.imageStack:hover .me {
+  transform: translateY(-2px) rotate(-8deg);
+  opacity: 1;
+}
+
+.muayThai {
+  position: absolute;
+  right: -4%;
+  top: -2%;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: white;
+  z-index: 1;
+  opacity: 0.85;
+  transform: rotate(12deg);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.16));
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.imageStack:hover .muayThai {
+  transform: translateY(-3px) rotate(12deg);
+  opacity: 1;
+}
+
+.buddha {
+  position: absolute;
+  left: 12%;
+  bottom: -18%;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: white;
+  z-index: 0;
+  opacity: 0.85;
+  transform: rotate(-3deg);
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.16));
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.imageStack:hover .buddha {
+  transform: translateY(-2px) rotate(-6deg);
+  opacity: 1;
+}
+
+.helloBox {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  padding-left: 40px;
+  border-radius: 10px;
+  width: 50%;
+  // margin-top: 1.5rem;
+  h1 {
+    font-size: 52px;
+    color: $primary-color;
+  }
+  h3 {
+    font-size: 35px;
+    color: $primary-gold;
+  }
+  h5 {
+    font-size: 24px;
+    color: $primary-color;
+  }
+}
+
+@media (max-width: 768px) {
+  .imageStack {
+    cursor: default;
+  }
+
+  .imageStack::before,
+  .imageStack::after {
+    display: none;
+  }
+
+  .temple,
+  .vietnam,
+  .me,
+  .muayThai,
+  .buddha {
+    display: none;
+  }
+
+  .image {
+    transform: none;
+    background-color: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,16 @@
+@import '@styles/variables.scss';
+.footer {
+  background-color: $primary-color-light;
+  height: 80px;
+  text-align: center;
+  position: sticky;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding-bottom: 10px;
+  color: $primary-white;
+}
+
+.footerContent {
+  padding-top: 2rem;
+}

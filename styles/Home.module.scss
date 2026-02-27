@@ -1,11 +1,12 @@
+@import '@styles/variables.scss';
 .container {
   padding: 0 2rem;
-  background-color: #a4a5aa;
+  background-color: $primary-white;
 }
 
 .main {
   min-height: 100vh;
-  width: 80%;
+  width: 85%;
   flex: 1;
   display: flex;
   justify-content: space-between;
@@ -14,22 +15,25 @@
 
   .hello {
     width: 50%;
-    background-color: #33006e;
+    // background-color: $primary-color;
     position: absolute;
-    right: 2%;
+
+    right: 0%;
     padding: 1rem;
-    color: #ffffff;
+    color: $primary-color;
     h1 {
       font-size: 68px;
-      -webkit-text-stroke: 2px #a4a5aa;
-    }
-    h2 {
-      font-size: 48px;
-      -webkit-text-stroke: 2px #a4a5aa;
+      // -webkit-text-stroke: 2px #a4a5aa;
     }
     h3 {
+      font-size: 48px;
+      color: $primary-gold;
+      // -webkit-text-stroke: 2px #a4a5aa;
+    }
+    h5 {
       font-size: 40px;
       font-family: Microsoft JhengHei;
+      color: black;
     }
   }
   .code {
@@ -37,12 +41,6 @@
     top: 20%;
     left: 50%;
     transform: rotate(-10deg);
-  }
-  .baseball {
-    position: absolute;
-    bottom: 30%;
-    right: 7%;
-    transform: rotate(20deg);
   }
 
   .image {
