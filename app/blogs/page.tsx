@@ -57,7 +57,14 @@ export default function Blogs() {
     return <p className='mt-3 '>{blog.blocks?.[2]?.content}</p>
   };
   if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  if (isLoading)
+    return (
+      <div className='d-flex justify-content-center py-5'>
+        <div className='spinner-border text-primary' role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
   return (
     <div>
       <Navbar path={'blogs'} />

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import styles from './Navbar.module.scss';
 import Link from 'next/link';
+import Image from 'next/image';
 interface NavbarProp {
   path: string;
 }
@@ -29,6 +30,7 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
     >
       <div className='container-fluid'>
         <Link href='/' className='navbar-brand text-primary-color'>
+        <Image src='/images/logo.png' alt='logo' width={50} height={50} />
           Suki Ho
         </Link>
         <button
@@ -46,7 +48,7 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
           <ul className='navbar-nav'>
             {content.map((item) => {
               return (
-                <li className='nav-item'>
+                <li className='nav-item' key={item.path}>
                   <Link
                     href={item.href}
                     className={`nav-link ${

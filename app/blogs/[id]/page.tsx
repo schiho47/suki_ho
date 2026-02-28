@@ -18,7 +18,14 @@ export default function BlogPage() {
   const { data, error, isLoading } = useSWR(`/api/blogs/${id}`, apiFetcher);
 
   if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
+  if (isLoading)
+    return (
+      <div className='d-flex justify-content-center py-5'>
+        <div className='spinner-border text-primary' role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
   
   if (!data || !Array.isArray(data) || data.length === 0) {
     return <NotFound />;
