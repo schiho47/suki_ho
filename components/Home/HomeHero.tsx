@@ -202,9 +202,16 @@ const HomeHero = () => {
         </div>
       </div>
       <div ref={textRef} className={styles.helloBox}>
-        <h1>{content.h1}</h1>
-        <h3>{content.h3}</h3>
-        <h5>{content.h5}</h5>
+        <div className={styles.helloContent}>
+          <div>
+            <h1>{content.h1}</h1>
+            <h3>{content.h3}</h3>
+            <h5>{content.h5}</h5>
+          </div>
+          {!expanded && (
+            <Image src='/images/logo.png' alt='logo' width={200} height={200} />
+          )}
+        </div>
       </div>
     </div>
   );

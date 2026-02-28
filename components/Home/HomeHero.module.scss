@@ -189,7 +189,35 @@
   }
 }
 
+.helloContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .helloBox {
+    width: 100%;
+    padding: 10px;
+    padding-left: 20px;
+    border-radius: 5px;
+
+    h1 {
+      font-size: 32px;
+    }
+    h3 {
+      font-size: 24px;
+    }
+    h5 {
+      font-size: 18px;
+    }
+  }
+
   .imageStack {
     cursor: default;
   }

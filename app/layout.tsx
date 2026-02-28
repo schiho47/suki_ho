@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'Suki Ho',
   description: 'A Frontend Developer based in Taipei',
   viewport: 'width=device-width, initial-scale=1',
+  icons: {
+    icon: '/images/logo_background.png',
+  },
 };
 
 export default function RootLayout({
