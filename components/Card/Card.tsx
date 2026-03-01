@@ -56,16 +56,16 @@ const Card: React.FC<CardProps> = ({
                 </span>
               )}
             </div>
-            {
-              description && (
-                <p className='card-text'>{description}</p>
-              )
-            }
+            {description && (
+              <div className='card-text'>{description}</div>
+            )}
           </div>
         </div>
         <div className={linkBlockClassName}>
           <Link href={link} target='_blank'>
-            {linkDescription}
+            <span >
+              {`${linkDescription} » `}
+            </span>
           </Link>
         </div>
       </div>

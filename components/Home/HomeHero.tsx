@@ -209,7 +209,7 @@ const HomeHero = () => {
             <h5>{content.h5}</h5>
           </div>
           {!expanded && (
-            <Image src='/images/logo.png' alt='logo' width={200} height={200} />
+            <Image src='/images/logo.png' alt='logo' width={250} height={250} />
           )}
         </div>
       </div>

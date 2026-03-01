@@ -11,12 +11,22 @@
     padding-bottom: 2rem;
     position: relative;
   }
-  h1 {
+  .headerRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
     margin: 10rem auto 3rem auto;
     width: 95%;
   }
+  h1 {
+    margin: 0;
+    flex: 1 1 70%;
+  }
   .dateTag {
-    right: 20px;
+    margin: 0;
+    color: #6c757d;
   }
   .content {
     width: 90%;

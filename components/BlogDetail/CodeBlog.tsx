@@ -10,8 +10,7 @@ const blockContentColor = {
   Hard: 'danger',
 };
 
-const 
-CodeBlog = ({ blog }: CodeBlogProps) => {
+const CodeBlog = ({ blog }: CodeBlogProps) => {
   if (!blog.blocks || blog.blocks.length === 0) return null;
 
   return (
@@ -28,10 +27,21 @@ CodeBlog = ({ blog }: CodeBlogProps) => {
                 language={block.language}
               />
             );
+            case 'image':
+            if (!block.url) return null;
+            return (
+              <img
+                key={`image-${index}`}
+                src={block.url}
+                alt={block.caption || 'blog image'}
+                width={700}
+                height={'auto'}
+              />
+            );
           case 'text':
             if (index === 0) {
               return (
-                <>
+                <div  key={`image-${index}`} className="mb-4">
                 <span key={`text-${index}-tag`} className={`badge text-bg-dark me-2`}>{blog?.tags?.length && blog?.tags?.length > 0 ? blog?.tags[0] : 'NeetCode'}</span>
                 <span
                   key={`text-${index}-badge`}
@@ -39,7 +49,7 @@ CodeBlog = ({ blog }: CodeBlogProps) => {
                 >
                   {block.content}
                 </span>
-                </>
+                </div>
               );
             }
             if (index === 1) {

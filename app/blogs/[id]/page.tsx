@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import { useEffect } from 'react';
 import Navbar from '@components/Navbar/Navbar';
 import styles from '@styles/BlogPage.module.scss';
 import { BlogsType } from 'type/blogs';
@@ -16,6 +17,17 @@ export default function BlogPage() {
   const id = params.id as string;
 
   const { data, error, isLoading } = useSWR(`/api/blogs/${id}`, apiFetcher);
+
+  useEffect(() => {
+    if (!data || !Array.isArray(data) || data.length === 0) return;
+    const rawTitle = (data[0] as BlogsType)?.title || 'Blog';
+    const maxLength = 40;
+    const truncatedTitle =
+      rawTitle.length > maxLength
+        ? `${rawTitle.slice(0, maxLength)}...`
+        : rawTitle;
+    document.title = truncatedTitle;
+  }, [data]);
 
   if (error) return <div>failed to load</div>;
   if (isLoading)
@@ -41,10 +53,10 @@ export default function BlogPage() {
         <div className={styles.blogContainer}>
         {data && Object.keys(data).length > 0 && (
           <>
-            <h1>{blog.title}</h1>
-            <h6 className={`position-absolute top-0 ${styles.dateTag}`}>
-              {blog.date}
-            </h6>
+            <div className={styles.headerRow}>
+              <h1>{blog.title}</h1>
+              {blog.date && <h6 className={styles.dateTag}>{blog.date}</h6>}
+            </div>
             <div className={styles.content}>
               {isCodeBlog ? <CodeBlog blog={blog} /> : <ReadingBlog blog={blog} />}
             </div>

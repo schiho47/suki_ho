@@ -209,8 +209,16 @@ async function syncNotionToMongo() {
   // 使用搜尋到的 ID 進行查詢（新版 SDK 用 dataSources.query）
   const queryPayload = {
     filter: {
-      property: 'status',
-      rich_text: { equals: 'Ready' }
+      and: [
+        {
+          property: 'status',
+          rich_text: { equals: 'Ready' }
+        },
+        {
+          property: 'isNew',
+          checkbox: { equals: true }
+        }
+      ]
     }
   };
 

@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
     >
       <div className='container-fluid'>
         <Link href='/' className='navbar-brand text-primary-color'>
-        <Image src='/images/logo.png' alt='logo' width={50} height={50} />
+        <Image src='/images/logo.png' alt='logo' width={80} height={80} />
           Suki Ho
         </Link>
         <button
