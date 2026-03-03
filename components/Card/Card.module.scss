@@ -11,19 +11,47 @@
   }
 }
 
+@media (max-width: 768px) {
+  .card {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+  }
+}
+
 .imageWrapper {
   margin-top: 1.5rem;
 }
 
 .cardTitle {
   color: $primary-color;
+  text-align: left;
 }
 .card-body {
   background-color: $primary-white;
 }
 
+.cardText {
+  display: -webkit-box;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.headerRow {
+  flex-wrap: wrap;
+}
+
+.dateText {
+  width: 100%;
+}
+
 .cardImage {
-  object-fit: fill;
+  object-fit: contain;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .linkBlock {
@@ -33,11 +61,33 @@
 
 .linkBlockWithImage {
   height: 30px;
-  margin: -1rem 10px 10px 0;
+  margin: 0px 12px 12px 0;
 }
 
 .linkBlockNoImage {
   position: absolute;
-  bottom: 20px;
-  right: 50px;
+  bottom: 15px;
+  right: 28px;
+}
+
+@media (max-width: 768px) {
+  .linkBlockNoImage {
+    position: static;
+    margin-top: 0.75rem;
+  }
+
+  .linkBlock {
+    font-weight: 600;
+    padding-bottom: 15px;
+  }
+
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .dateText {
+    text-align: right;
+  }
 }

@@ -1,5 +1,6 @@
 import '../styles/globals.scss';
 import type { Metadata } from 'next';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Suki Ho',
@@ -17,7 +18,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body>{children}</body>
+      <body>
+        <Script
+          src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
+          strategy='afterInteractive'
+        />
+        {children}
+      </body>
     </html>
   );
 }

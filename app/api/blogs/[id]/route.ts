@@ -129,10 +129,10 @@ async function getPageBlocks(pageId: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const db = await getDatabase();
     const collection = db.collection<BlogsType>('blogs');
     const blogId = parseInt(id, 10);
