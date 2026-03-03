@@ -76,6 +76,9 @@
 }
 
 @media (max-width: 600px) {
+  .main {
+    min-height: 85vh;
+  }
   .grid {
     width: 100%;
     flex-direction: column;

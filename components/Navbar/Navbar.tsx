@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Collapse } from 'bootstrap';
 import styles from './Navbar.module.scss';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,11 +11,30 @@ interface NavbarProp {
 
 const Navbar: React.FC<NavbarProp> = ({ path }) => {
   const [showDropDown, setShowDropDown] = useState({ display: 'none' });
+  const [isOpen, setIsOpen] = useState(false);
+  const collapseRef = useRef<HTMLDivElement>(null);
+  const collapseInstance = useRef<Collapse | null>(null);
 
   const toggleLanguage = () => {
     setShowDropDown((prev) =>
       prev.display === 'block' ? { display: 'none' } : { display: 'block' }
     );
+  };
+
+  useEffect(() => {
+    if (!collapseRef.current) return;
+    collapseInstance.current = new Collapse(collapseRef.current, {
+      toggle: false,
+    });
+    return () => {
+      collapseInstance.current?.dispose();
+      collapseInstance.current = null;
+    };
+  }, []);
+
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev);
+    collapseInstance.current?.toggle();
   };
 
   const content = [
@@ -36,16 +56,20 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
         <button
           className='navbar-toggler'
           type='button'
-          data-bs-toggle='collapse'
-          data-bs-target='#navbarNav'
-          aria-controls='navbarNav'
-          aria-expanded='false'
+          aria-controls='navbarNavAltMarkup'
+          aria-expanded={isOpen}
           aria-label='Toggle navigation'
+          onClick={handleToggle}
         >
           <span className='navbar-toggler-icon'></span>
         </button>
-        <div className='collapse navbar-collapse' id='navbarNavAltMarkup'>
-          <ul className='navbar-nav'>
+        <div
+          className={`collapse navbar-collapse ${styles.menu}`}
+          id='navbarNavAltMarkup'
+          data-bs-parent='.navbar'
+          ref={collapseRef}
+        >
+          <ul className='navbar-nav container-fluid'>
             {content.map((item) => {
               return (
                 <li className='nav-item' key={item.path}>
@@ -55,7 +79,6 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
                       path === item.path ? styles.active : styles.inactive
                     }`}
                     aria-current='page'
-                   
                   >
                     {item.name}
                   </Link>

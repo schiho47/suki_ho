@@ -23,8 +23,11 @@ const textMap: Record<string, TextContent> = {
 const HomeHero = () => {
   const [expanded, setExpanded] = useState(false);
   const [hoverText, setHoverText] = useState<TextContent | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileShowDefault, setMobileShowDefault] = useState(true);
   const stackRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const vietnamRef = useRef<HTMLDivElement>(null);
   const templeRef = useRef<HTMLDivElement>(null);
   const meRef = useRef<HTMLDivElement>(null);
@@ -35,10 +38,32 @@ const HomeHero = () => {
     if (!textRef.current) return;
     gsap.fromTo(
       textRef.current,
-      { opacity: 0, y: 8 },
+      { opacity: 0, y: 12 },
       { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }
     );
-  }, [expanded, hoverText]);
+  }, [expanded, hoverText, mobileShowDefault]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const media = window.matchMedia('(max-width: 768px)');
+    const handleChange = () => setIsMobile(media.matches);
+    handleChange();
+    media.addEventListener('change', handleChange);
+    return () => media.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile || !contentRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries[0]?.isIntersecting;
+        setMobileShowDefault(!isVisible);
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(contentRef.current);
+    return () => observer.disconnect();
+  }, [isMobile]);
 
   const handleToggle = () => {
     const targets = [
@@ -93,7 +118,11 @@ const HomeHero = () => {
     }
   };
 
-  const content = expanded
+  const content = isMobile
+    ? mobileShowDefault
+      ? homeContent.defaultText
+      : homeContent.photoOpenedText
+    : expanded
     ? hoverText ?? homeContent.photoOpenedText
     : homeContent.defaultText;
 
@@ -108,7 +137,7 @@ const HomeHero = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div ref={contentRef} className={styles.container}>
       <div
         ref={stackRef}
         className={styles.imageStack}
@@ -178,7 +207,7 @@ const HomeHero = () => {
         >
           <Image
             src={'/images/home/me.png'}
-            width={240}
+            width={230}
             height={380}
             className={styles.me}
             loading='eager'
@@ -202,16 +231,45 @@ const HomeHero = () => {
         </div>
       </div>
       <div ref={textRef} className={styles.helloBox}>
-        <div className={styles.helloContent}>
-          <div>
-            <h1>{content.h1}</h1>
-            <h3>{content.h3}</h3>
-            <h5>{content.h5}</h5>
+        {isMobile ? (
+          <div className={styles.mobileCarousel}>
+            {[
+              homeContent.defaultText,
+              homeContent.photoOpenedText,
+              homeContent.developer,
+              homeContent.muayThai,
+              homeContent.heritage,
+              homeContent.architecture,
+              homeContent.devotion,
+            ].map((item, index) => (
+              <div key={index} className={styles.mobileSlide}>
+                <h1>{item.h1}</h1>
+                <h3>{item.h3}</h3>
+                <h5>{item.h5}</h5>
+              </div>
+            ))}
           </div>
-          {!expanded && (
-            <Image src='/images/logo.png' alt='logo' width={250} height={250} />
-          )}
-        </div>
+        ) : (
+          <>
+            <div className={styles.helloContent}>
+              <div>
+                <h1>{content.h1}</h1>
+                <h3>{content.h3}</h3>
+                <h5>{content.h5}</h5>
+              </div>
+              {!expanded && !isMobile && (
+                <Image
+                  src='/images/logo.png'
+                  className={styles.helloLogo}
+                  alt='logo'
+                  width={250}
+                  height={250}
+                />
+              )}
+            </div>
+          </>
+        )}
+        {isMobile && <div className={styles.mobileLogo} />}
       </div>
     </div>
   );

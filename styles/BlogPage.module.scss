@@ -60,3 +60,22 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .container {
+    .headerRow {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin: 6rem auto 2rem auto;
+    }
+
+    h1 {
+      flex-basis: auto;
+    }
+
+    .dateTag {
+      margin-top: 0;
+    }
+  }
+}

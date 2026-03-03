@@ -17,3 +17,17 @@
     margin-bottom: 2rem;
   }
 }
+
+.tagsRow {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.tagsRow :global(.nav-item) {
+  flex: 0 0 auto;
+}
