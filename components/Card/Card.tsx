@@ -46,26 +46,26 @@ const Card: React.FC<CardProps> = ({
         )}
         <div className={`${img ? 'col-md-6' : 'col-md-12'}`}>
           <div className='card-body'>
-            <div className='d-flex justify-content-between align-items-center'>
+            <div className={`d-flex justify-content-between align-items-center ${styles.headerRow}`}>
               <h3 className={`card-title mb-0 ${styles.cardTitle}`}>
                 {title}
               </h3>
               {date && (
-                <span className='text-muted small'>
+                <span className={`text-muted small ${styles.dateText}`}>
                   {new Date(date).toLocaleDateString('zh-TW')}
                 </span>
               )}
             </div>
-            {
-              description && (
-                <p className='card-text'>{description}</p>
-              )
-            }
+            {description && (
+              <div className={`card-text ${styles.cardText}`}>{description}</div>
+            )}
           </div>
         </div>
         <div className={linkBlockClassName}>
           <Link href={link} target='_blank'>
-            {linkDescription}
+            <span >
+              {`${linkDescription} » `}
+            </span>
           </Link>
         </div>
       </div>

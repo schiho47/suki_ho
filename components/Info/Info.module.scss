@@ -79,6 +79,7 @@
     margin-top: 3rem;
     padding: 1rem;
     border: 1px solid $primary-gold;
+    width: 45%;
   }
 
   .sectionTitle {
@@ -109,5 +110,42 @@
     margin-top: 2rem;
     width: 45%;
     border: 1px solid $primary-gold;
+  }
+}
+
+@media (max-width: 768px) {
+  .timeline::before {
+    left: 12px;
+    transform: none;
+  }
+
+  .timelineItem {
+    padding-left: 2.5rem;
+  }
+
+  .timelineItem::before {
+    left: 12px;
+    transform: none;
+  }
+
+  .timelineItem:nth-child(odd),
+  .timelineItem:nth-child(even) {
+    justify-content: flex-start;
+    padding-left: 2.5rem;
+    padding-right: 0;
+  }
+
+  .timelineCard {
+    width: 100%;
+  }
+
+  .contactContainer {
+    flex-direction: column;
+    .section {
+      width: 100%;
+    }
+    .contactCard {
+      width: 100%;
+    }
   }
 }

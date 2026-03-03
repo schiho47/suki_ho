@@ -70,7 +70,7 @@ export default function Blogs() {
       <Navbar path={'blogs'} />
       <div className={styles.container}>
         <h1>Blogs</h1>
-        <ul className='nav nav-tabs mb-4'>
+        <ul className={`nav nav-tabs mb-4 ${styles.tagsRow}`}>
           {tags.map((tag) => (
             <li key={tag} className='nav-item'>
               <button

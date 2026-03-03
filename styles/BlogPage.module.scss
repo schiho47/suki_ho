@@ -11,20 +11,32 @@
     padding-bottom: 2rem;
     position: relative;
   }
-  h1 {
+  .headerRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
     margin: 10rem auto 3rem auto;
     width: 95%;
   }
+  h1 {
+    margin: 0;
+    flex: 1 1 70%;
+  }
   .dateTag {
-    right: 20px;
+    margin: 0;
+    color: #6c757d;
   }
   .content {
     width: 90%;
     margin: 1rem auto;
     margin-bottom: 4rem;
+    overflow-x: hidden;
     img {
       margin: 1rem auto;
-      max-width: 700px;
+      max-width: 100%;
+      display: block;
       height: auto;
       object-fit: contain;
     }
@@ -42,11 +54,33 @@
     width: 90%;
     margin: 1.5rem auto;
     margin-top: 3rem;
+    overflow-x: hidden;
+    word-break: break-word;
+    overflow-wrap: anywhere;
     li {
       margin: 10px 0;
     }
     a {
       color: rgb(71, 88, 221);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    .headerRow {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin: 6rem auto 2rem auto;
+    }
+
+    h1 {
+      flex-basis: auto;
+    }
+
+    .dateTag {
+      margin-top: 0;
     }
   }
 }
