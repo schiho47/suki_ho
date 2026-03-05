@@ -14,6 +14,12 @@
     color: $primary-color;
     margin-bottom: 2rem;
   }
+  .headerRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
   .projects {
     display: flex;
     flex-wrap: wrap;
