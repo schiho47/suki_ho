@@ -73,13 +73,7 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
             })}
           </ul>
         </div>
-        {/* <div className={`${styles.dropdown}`}>
-          <i className="bi bi-translate" onClick={toggleLanguage} />
-          <ul style={showDropDown}>
-            <li>中文</li>
-            <li>English</li>
-          </ul>
-        </div> */}
+       
       </div>
     </nav>
   );
