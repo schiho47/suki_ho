@@ -45,14 +45,14 @@ const Card: React.FC<CardProps> = ({
           </div>
         )}
         <div className={`${img ? 'col-md-6' : 'col-md-12'}`}>
-          <div className='card-body'>
+          <div className={`card-body ${!img ? styles.bodyWithFooter : ''}`}>
             <div className={`d-flex justify-content-between align-items-center ${styles.headerRow}`}>
               <h3 className={`card-title mb-0 ${styles.cardTitle}`}>
                 {title}
               </h3>
               {date && (
                 <span className={`text-muted small ${styles.dateText}`}>
-                  {new Date(date).toLocaleDateString('zh-TW')}
+                  {new Date(date).toLocaleDateString('en-CA')}
                 </span>
               )}
             </div>

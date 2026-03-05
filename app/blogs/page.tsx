@@ -95,7 +95,7 @@ export default function Blogs() {
                 date={blog.date}
                 link={`/blogs/${blog._id}`}
                 linkDescription='看更多'
-                size={{ height:'160px'}}
+                size={{ minHeight:'160px'}}
               />
             );
           })}

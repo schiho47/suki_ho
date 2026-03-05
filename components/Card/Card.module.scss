@@ -9,6 +9,10 @@
     transform: translateY(-5px);
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
   }
+  .dateText {
+    width: 100%;
+    text-align: right;
+  }
 }
 
 @media (max-width: 768px) {
@@ -29,6 +33,10 @@
 }
 .card-body {
   background-color: $primary-white;
+}
+
+.bodyWithFooter {
+  padding-bottom: 2.5rem;
 }
 
 .cardText {
