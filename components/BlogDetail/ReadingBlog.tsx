@@ -3,9 +3,21 @@ import { BlogsType } from 'type/blogs';
 
 interface ReadingBlogProps {
   blog: BlogsType;
+  lang: 'zh' | 'en';
 }
 
-const ReadingBlog = ({ blog }: ReadingBlogProps) => {
+const ReadingBlog = ({ blog, lang }: ReadingBlogProps) => {
+  const isDissertation = blog.tags?.includes('Disseration');
+  if (isDissertation && lang === 'en' && blog.pdfUrl && blog.startPage) {
+    const pdfSrc = `${blog.pdfUrl}#page=${blog.startPage}`;
+    return (
+      <iframe
+        title='Dissertation PDF'
+        src={pdfSrc}
+        style={{ width: '100%', height: '80vh', border: 'none' }}
+      />
+    );
+  }
   if (!blog.blocks || blog.blocks.length === 0) return null;
 
 const getPointTitle=(str:string)=>{
