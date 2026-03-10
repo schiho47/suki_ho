@@ -6,4 +6,5 @@ export interface ProjectTypes {
   img: string;
   description: string;
   link: string;
+  internalLink?: string;
 }

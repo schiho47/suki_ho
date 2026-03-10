@@ -9,6 +9,10 @@ interface CardProps {
   size: object;
   img?: string;
   date?: string | null;
+  linkTarget?: '_blank' | '_self';
+  secondaryLink?: string;
+  secondaryLinkDescription?: string;
+  secondaryLinkTarget?: '_blank' | '_self';
 }
 const Card: React.FC<CardProps> = ({
   title,
@@ -18,6 +22,10 @@ const Card: React.FC<CardProps> = ({
   linkDescription,
   size,
   date,
+  linkTarget = '_blank',
+  secondaryLink,
+  secondaryLinkDescription,
+  secondaryLinkTarget = '_self',
 }) => {
   const linkBlockClassName = img
     ? `${styles.linkBlock} ${styles.linkBlockWithImage}`
@@ -31,7 +39,7 @@ const Card: React.FC<CardProps> = ({
           <div
             className={`col-md-6 img-fluid rounded-start ${styles.imageWrapper}`}
           >
-            <Link href={link} target='_blank'>
+            <Link href={link} target={linkTarget}>
               <Image
                 src={img}
                 alt={title}
@@ -62,7 +70,17 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
         <div className={linkBlockClassName}>
-          <Link href={link} target='_blank'>
+          {secondaryLink && secondaryLinkDescription && (
+            <Link href={secondaryLink} target={secondaryLinkTarget}>
+              <span>
+                {`${secondaryLinkDescription} »`}
+              </span>
+            </Link>
+          )}
+          {secondaryLink && secondaryLinkDescription && (
+            <span className={styles.linkSeparator}>｜</span>
+          )}
+          <Link href={link} target={linkTarget}>
             <span >
               {`${linkDescription} » `}
             </span>
