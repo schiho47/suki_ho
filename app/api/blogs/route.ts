@@ -1,24 +1,40 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@lib/mongodb';
 import { BlogsType } from 'type/blogs';
 
 type Data = BlogsType[] | { error: string };
 
-export async function GET() {
+export const revalidate = 300;
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
+    const lang = request.nextUrl.searchParams.get('lang') || 'zh';
     const db = await getDatabase();
     const collection = db.collection<BlogsType>('blogs');
 
     const blogs = await collection
-      .find({}, { projection: { id: 1, tags: 1, title: 1, blocks: 1, date: 1 } })
+      .find(
+        {},
+        { projection: { id: 1, tags: 1, title: 1, titleEn: 1, blocks: 1, blocksEn: 1, date: 1 } }
+      )
       .toArray();
 
     const blogsWithStringId = blogs.map((blog) => ({
       _id: blog._id?.toString(),
       id: blog.id ?? blog.notionId ?? blog._id?.toString(),
       tags: blog.tags,
-      title: blog.title,
-      blocks: Array.isArray(blog.blocks) ? blog.blocks.slice(0, 3) : [],
+      title: lang === 'en' ? blog.titleEn || blog.title : blog.title,
+      blocks:
+        lang === 'en'
+          ? Array.isArray(blog.blocksEn)
+            ? blog.blocksEn.slice(0, 3)
+            : Array.isArray(blog.blocks)
+              ? blog.blocks.slice(0, 3)
+              : []
+          : Array.isArray(blog.blocks)
+            ? blog.blocks.slice(0, 3)
+            : [],
       notionId: blog.notionId,
       date: blog.date ?? null,
     }));

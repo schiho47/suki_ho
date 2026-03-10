@@ -1,13 +1,13 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import Navbar from '@components/Navbar/Navbar';
 import styles from '@styles/BlogPage.module.scss';
 import { BlogsType } from 'type/blogs';
 import Footer from '@components/Footer/Footer';
 import { apiFetcher } from '@lib/apiFetcher';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import NotFound from '../../not-found';
 import CodeBlog from '@components/BlogDetail/CodeBlog';
 import ReadingBlog from '@components/BlogDetail/ReadingBlog';
@@ -15,9 +15,47 @@ import ReadingBlog from '@components/BlogDetail/ReadingBlog';
 export default function BlogPage() {
   const params = useParams();
   const id = params.id as string;
-
-  const { data, error, isLoading } = useSWR(`/api/blogs/${id}`, apiFetcher);
-
+  const [lang, setLang] = useState<'zh' | 'en' | null>(null);
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const qp = searchParams.get('lang');
+    const saved = window.localStorage.getItem('lang');
+    const nextLang =
+      qp === 'en' || qp === 'zh'
+        ? qp
+        : saved === 'en' || saved === 'zh'
+          ? saved
+          : 'zh';
+    setLang(nextLang);
+  }, [searchParams]);
+  useEffect(() => {
+    if (typeof window === 'undefined' || !lang) return;
+    window.localStorage.setItem('lang', lang);
+  }, [lang]);
+  const currentLang = lang ?? 'zh';
+  const { cache } = useSWRConfig();
+  const key = lang ? `/api/blogs/${id}?lang=${lang}` : null;
+  const fallbackData = key ? cache.get(key) : undefined;
+  const { data, error, isLoading, mutate } = useSWR(key, apiFetcher, {
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    fallbackData,
+  });
+  useSWR(
+    lang === 'en' || !lang ? null : `/api/blogs/${id}?lang=${lang}&live=1`,
+    apiFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      onSuccess: (liveData) => {
+        if (Array.isArray(liveData)) {
+          mutate(liveData, false);
+        }
+      },
+    }
+  );
   useEffect(() => {
     if (!data || !Array.isArray(data) || data.length === 0) return;
     const rawTitle = (data[0] as BlogsType)?.title || 'Blog';
@@ -28,7 +66,14 @@ export default function BlogPage() {
         : rawTitle;
     document.title = truncatedTitle;
   }, [data]);
-
+  if (!lang)
+    return (
+      <div className='d-flex justify-content-center py-5'>
+        <div className='spinner-border text-primary' role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </div>
+    );
   if (error) return <div>failed to load</div>;
   if (isLoading)
     return (
@@ -38,7 +83,6 @@ export default function BlogPage() {
         </div>
       </div>
     );
-  
   if (!data || !Array.isArray(data) || data.length === 0) {
     return <NotFound />;
   }
@@ -58,28 +102,15 @@ export default function BlogPage() {
               {blog.date && <h6 className={styles.dateTag}>{blog.date}</h6>}
             </div>
             <div className={styles.content}>
-              {isCodeBlog ? <CodeBlog blog={blog} /> : <ReadingBlog blog={blog} />}
+              {isCodeBlog ? (
+                <CodeBlog blog={blog} />
+              ) : (
+                <ReadingBlog blog={blog} lang={currentLang} />
+              )}
             </div>
             </>
           )}
         </div>
-        {/* {data && data[0]?.reference && (
-          <div className={styles.reference}>
-            <h3>Reference</h3>
-            <ol>
-              {data[0].reference.map((ref: BlogsType) => {
-                if (!ref.link) {
-                  return null;
-                }
-                return (
-                  <li key={ref.id}>
-                    <Link href={ref.link}>{ref.title}</Link>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        )} */}
       </div>
       <footer>
         <Footer />
