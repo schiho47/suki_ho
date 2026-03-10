@@ -8,11 +8,8 @@ const { Client } = require('@notionhq/client');
 const mongoose = require('mongoose');
 const translate = require('google-translate-api-next');
 
-// 1. 初始化 Notion 客戶端
 const notion = new Client({ auth: process.env.NOTION_INTERNAL_INTEGRATION_TOKEN });
-const DATABASE_ID = process.env.NOTION_BLOG_DATABASE_ID;
-console.log('當前讀取的 Database ID:', DATABASE_ID);
-// 2. 定義 MongoDB Schema (沿用之前的設計)
+
 const blogSchema = new mongoose.Schema({
   title: String,
   titleEn: String,
@@ -24,7 +21,7 @@ const blogSchema = new mongoose.Schema({
   endPage: Number,
   blocks: [
     {
-      type: { type: String }, // 'text', 'code', 'heading'
+      type: { type: String },
       content: String,
       language: String,
       url: String,
@@ -45,8 +42,18 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema);
 
-
 const imagesDir = path.resolve(__dirname, '../public/notion-images');
+const DISSERTATION_PDF_URL = process.env.DISSERTATION_PDF_URL || '';
+const pageMap = {
+  // '<notion_page_id_or_title>': { startPage: 1, endPage: 5 },
+  '302b50079d2580cab480c1c5ff1192cd': { startPage: 2, endPage: 6 },
+};
+
+function resolvePdfInfo({ notionId, title }) {
+  const byId = pageMap[notionId];
+  if (byId) return byId;
+  return pageMap[title];
+}
 
 async function ensureImagesDir() {
   await fs.mkdir(imagesDir, { recursive: true });
@@ -97,58 +104,6 @@ async function translateText(text) {
   return result.text || text;
 }
 
-function capitalizeHeading(text) {
-  if (!text) return text;
-  return text.replace(/^(\s*[a-z])/, (match) => match.toUpperCase());
-}
-
-async function translateBlocks(blocks) {
-  const translated = [...blocks];
-  const textIndexes = [];
-  const textPayload = [];
-  const captionIndexes = [];
-  const captionPayload = [];
-
-  blocks.forEach((block, index) => {
-    if (block.type === 'heading' || block.type === 'text') {
-      textIndexes.push(index);
-      textPayload.push(block.content || '');
-    }
-    if (block.type === 'image') {
-      captionIndexes.push(index);
-      captionPayload.push(block.caption || '');
-    }
-  });
-
-  const translateArray = async (payload) => {
-    if (!payload.length) return [];
-    return await Promise.all(payload.map((item) => translateText(item)));
-  };
-
-  const translatedTexts = await translateArray(textPayload);
-  const translatedCaptions = await translateArray(captionPayload);
-
-  textIndexes.forEach((blockIndex, i) => {
-    const content = translatedTexts[i];
-    if (content !== undefined) {
-      const base = translated[blockIndex];
-      const finalContent =
-        base.type === 'heading' ? capitalizeHeading(content) : content;
-      translated[blockIndex] = { ...base, content: finalContent };
-    }
-  });
-
-  captionIndexes.forEach((blockIndex, i) => {
-    const caption = translatedCaptions[i];
-    if (caption !== undefined) {
-      translated[blockIndex] = { ...translated[blockIndex], caption };
-    }
-  });
-
-  return translated;
-}
-
-// 3. 轉換 Notion Block 到我們的 JSON 格式
 async function fetchAllBlocks(blockId) {
   const allResults = [];
   let cursor = undefined;
@@ -175,50 +130,54 @@ async function getPageBlocks(pageId) {
     if (block.type === 'paragraph') {
       mapped = {
         type: 'text',
-        content: block.paragraph.rich_text.map(t => t.plain_text).join('')
+        content: block.paragraph.rich_text.map((t) => t.plain_text).join('')
       };
     }
     if (block.type === 'bulleted_list_item') {
       mapped = {
         type: 'text',
-        content: `• ${block.bulleted_list_item.rich_text.map(t => t.plain_text).join('')}`
+        content: `• ${block.bulleted_list_item.rich_text
+          .map((t) => t.plain_text)
+          .join('')}`
       };
     }
     if (block.type === 'numbered_list_item') {
       mapped = {
         type: 'text',
-        content: block.numbered_list_item.rich_text.map(t => t.plain_text).join('')
+        content: block.numbered_list_item.rich_text
+          .map((t) => t.plain_text)
+          .join('')
       };
     }
     if (block.type === 'quote') {
       mapped = {
         type: 'text',
-        content: block.quote.rich_text.map(t => t.plain_text).join('')
+        content: block.quote.rich_text.map((t) => t.plain_text).join('')
       };
     }
     if (block.type === 'callout') {
       mapped = {
         type: 'text',
-        content: block.callout.rich_text.map(t => t.plain_text).join('')
+        content: block.callout.rich_text.map((t) => t.plain_text).join('')
       };
     }
     if (block.type === 'toggle') {
       mapped = {
         type: 'text',
-        content: block.toggle.rich_text.map(t => t.plain_text).join('')
+        content: block.toggle.rich_text.map((t) => t.plain_text).join('')
       };
     }
     if (block.type === 'code') {
       mapped = {
         type: 'code',
         language: block.code.language,
-        content: block.code.rich_text.map(t => t.plain_text).join('')
+        content: block.code.rich_text.map((t) => t.plain_text).join('')
       };
     }
     if (block.type.startsWith('heading')) {
       mapped = {
         type: 'heading',
-        content: block[block.type].rich_text.map(t => t.plain_text).join('')
+        content: block[block.type].rich_text.map((t) => t.plain_text).join('')
       };
     }
     if (block.type === 'image') {
@@ -227,7 +186,7 @@ async function getPageBlocks(pageId) {
           ? block.image.file.url
           : block.image.external.url;
       const caption = block.image.caption
-        .map(t => t.plain_text)
+        .map((t) => t.plain_text)
         .join('');
       let resolvedUrl = imageUrl;
 
@@ -257,19 +216,16 @@ async function getPageBlocks(pageId) {
   return blocks;
 }
 
-// 4. 主同步邏輯
 async function syncNotionToMongo() {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log('Connected to MongoDB');
 
-  // --- 直接從搜尋結果抓取資料庫 ---
   const searchResponse = await notion.search({
     filter: { property: 'object', value: 'data_source' }
   });
 
-  // 找到標題叫做 "Blogs" 的那個資料庫
   const targetDb = searchResponse.results.find(
-    db => db.title[0]?.plain_text === 'Blogs'
+    (db) => db.title[0]?.plain_text === 'Blogs'
   );
 
   if (!targetDb) {
@@ -277,9 +233,6 @@ async function syncNotionToMongo() {
     return;
   }
 
-  console.log('成功定位資料庫！實際 ID 為:', targetDb.id);
-
-  // 使用搜尋到的 ID 進行查詢（新版 SDK 用 dataSources.query）
   const queryPayload = {
     filter: {
       and: [
@@ -304,16 +257,8 @@ async function syncNotionToMongo() {
           ]
         },
         {
-          or: [
-            {
-              property: 'EN',
-              rich_text: { equals: 'no' }
-            },
-            {
-              property: 'EN',
-              rich_text: { equals: 'false' }
-            }
-          ]
+          property: 'EN',
+          rich_text: { equals: 'PDF' }
         }
       ]
     }
@@ -321,7 +266,10 @@ async function syncNotionToMongo() {
 
   const response = notion.databases?.query
     ? await notion.databases.query({ database_id: targetDb.id, ...queryPayload })
-    : await notion.dataSources.query({ data_source_id: targetDb.id, ...queryPayload });
+    : await notion.dataSources.query({
+        data_source_id: targetDb.id,
+        ...queryPayload
+      });
 
   console.log(`準備同步 ${response.results.length} 篇文章...`);
 
@@ -335,19 +283,20 @@ async function syncNotionToMongo() {
       (Array.isArray(titleParts)
         ? titleParts.map((item) => item?.plain_text || '').join('')
         : '') || 'Untitled';
-    const tags = page.properties.tags.rich_text[0].plain_text
+    const tags = page.properties.tags.rich_text[0].plain_text;
     const notionId = page.id;
 
-    console.log(`Syncing: ${title}...`);
-
-    // 抓取該頁面的所有 Blocks
     const blocks = await getPageBlocks(notionId);
-    console.log(`Blocks for ${title}:`, blocks);
-
-    // 翻譯成英文
     const titleEn = await translateText(title);
-    const blocksEn = await translateBlocks(blocks);
-    // 更新或插入到 MongoDB
+    const pdfInfo = resolvePdfInfo({ notionId, title }) || {};
+    const pdfUrl = pdfInfo.pdfUrl || DISSERTATION_PDF_URL;
+    const startPage = Number.isFinite(pdfInfo.startPage)
+      ? pdfInfo.startPage
+      : undefined;
+    const endPage = Number.isFinite(pdfInfo.endPage)
+      ? pdfInfo.endPage
+      : undefined;
+
     await Blog.findOneAndUpdate(
       { notionId },
       {
@@ -355,14 +304,15 @@ async function syncNotionToMongo() {
         titleEn,
         tags,
         blocks,
-        blocksEn,
         date,
+        pdfUrl,
+        startPage,
+        endPage,
         updatedAt: new Date()
       },
       { upsert: true }
     );
 
-    // 標記 Notion EN 為 yes
     try {
       await notion.pages.update({
         page_id: notionId,

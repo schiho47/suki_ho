@@ -25,14 +25,21 @@ const HomeHero = () => {
   const [hoverText, setHoverText] = useState<TextContent | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileShowDefault, setMobileShowDefault] = useState(true);
+  const [stackReady, setStackReady] = useState(false);
   const stackRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const loadedIdsRef = useRef(new Set<string>());
+  const stackAnimatedRef = useRef(false);
+  const h1Ref = useRef<HTMLHeadingElement>(null);
+  const h3Ref = useRef<HTMLHeadingElement>(null);
+  const h5Ref = useRef<HTMLHeadingElement>(null);
   const vietnamRef = useRef<HTMLDivElement>(null);
   const templeRef = useRef<HTMLDivElement>(null);
   const meRef = useRef<HTMLDivElement>(null);
   const muayThaiRef = useRef<HTMLDivElement>(null);
   const buddhaRef = useRef<HTMLDivElement>(null);
+  const totalImages = 6;
 
   useEffect(() => {
     if (!textRef.current) return;
@@ -42,6 +49,25 @@ const HomeHero = () => {
       { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }
     );
   }, [expanded, hoverText, mobileShowDefault]);
+
+  useEffect(() => {
+    if (!textRef.current) return;
+    gsap.fromTo(
+      textRef.current,
+      { opacity: 0, y: 24, scale: 0.98 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power3.out' }
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!stackReady || !stackRef.current || stackAnimatedRef.current) return;
+    stackAnimatedRef.current = true;
+    gsap.fromTo(
+      stackRef.current,
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
+    );
+  }, [stackReady]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -125,6 +151,21 @@ const HomeHero = () => {
     : expanded
     ? hoverText ?? homeContent.photoOpenedText
     : homeContent.defaultText;
+  const isDefault = !isMobile && content === homeContent.defaultText;
+
+  const renderAnimatedText = (
+    text: string,
+    Tag: 'h1' | 'h3' | 'h5',
+    ref: React.RefObject<HTMLHeadingElement>
+  ) => (
+    <Tag ref={ref} aria-label={text}>
+      {text.split('').map((char, index) => (
+        <span key={`${Tag}-${index}`} style={{ display: 'inline-block' }}>
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </Tag>
+  );
 
   const handleMouseEnter = (id: string) => {
     if (!expanded) return;
@@ -136,11 +177,44 @@ const HomeHero = () => {
     setHoverText(null);
   };
 
+  const handleImageLoaded = (id: string) => {
+    if (loadedIdsRef.current.has(id)) return;
+    loadedIdsRef.current.add(id);
+    if (loadedIdsRef.current.size >= totalImages) {
+      setStackReady(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!isDefault) return;
+    const groups = [h1Ref.current, h3Ref.current, h5Ref.current].filter(
+      Boolean
+    ) as HTMLHeadingElement[];
+    groups.forEach((el, idx) => {
+      const spans = el.querySelectorAll('span');
+      if (!spans.length) return;
+      gsap.fromTo(
+        spans,
+        { opacity: 0, y: 14 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          stagger: 0.02,
+          delay: idx * 0.05,
+        }
+      );
+    });
+  }, [isDefault]);
+
   return (
     <div ref={contentRef} className={styles.container}>
       <div
         ref={stackRef}
-        className={styles.imageStack}
+        className={`${styles.imageStack} ${
+          stackReady ? styles.imageStackReady : styles.imageStackLoading
+        }`}
         onClick={handleToggle}
       >
         
@@ -156,6 +230,7 @@ const HomeHero = () => {
           className={styles.muayThai}
           loading='eager'
           alt={'Suki Ho Muay Thai'}
+          onLoadingComplete={() => handleImageLoaded('muayThai')}
         />
       </div>
       <div
@@ -170,6 +245,7 @@ const HomeHero = () => {
           className={styles.buddha}
           loading='eager'
           alt={'Buddha'}
+          onLoadingComplete={() => handleImageLoaded('buddha')}
         />
       </div>
         <div
@@ -184,6 +260,7 @@ const HomeHero = () => {
             className={styles.vietnam}
             loading='eager'
             alt={'Suki Ho Vietnam'}
+            onLoadingComplete={() => handleImageLoaded('vietnam')}
           />
         </div>
         <div
@@ -198,6 +275,7 @@ const HomeHero = () => {
             className={styles.temple}
             loading='eager'
             alt={'Suki Ho Temple'}
+            onLoadingComplete={() => handleImageLoaded('temple')}
           />
         </div>
         <div
@@ -212,6 +290,7 @@ const HomeHero = () => {
             className={styles.me}
             loading='eager'
             alt={'Suki Ho Developer'}
+            onLoadingComplete={() => handleImageLoaded('me')}
           />
         </div>
         <div
@@ -227,6 +306,7 @@ const HomeHero = () => {
             loading='eager'
             alt={'Suki Ho'}
             priority={true}
+            onLoadingComplete={() => handleImageLoaded('suki_ho')}
           />
         </div>
       </div>
@@ -253,9 +333,19 @@ const HomeHero = () => {
           <>
             <div className={styles.helloContent}>
               <div>
-                <h1>{content.h1}</h1>
-                <h3>{content.h3}</h3>
-                <h5>{content.h5}</h5>
+                {isDefault ? (
+                  <>
+                    {renderAnimatedText(content.h1, 'h1', h1Ref)}
+                    {renderAnimatedText(content.h3, 'h3', h3Ref)}
+                    {renderAnimatedText(content.h5, 'h5', h5Ref)}
+                  </>
+                ) : (
+                  <>
+                    <h1>{content.h1}</h1>
+                    <h3>{content.h3}</h3>
+                    <h5>{content.h5}</h5>
+                  </>
+                )}
               </div>
               {!expanded && !isMobile && (
                 <Image

@@ -4,6 +4,8 @@ import { ProjectTypes } from '@type/projects';
 
 type Data = ProjectTypes[] | { error: string };
 
+export const revalidate = 300;
+
 export async function GET() {
   try {
     const db = await getDatabase();

@@ -133,6 +133,8 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const lang = request.nextUrl.searchParams.get('lang') || 'zh';
+    const live = request.nextUrl.searchParams.get('live') === '1';
     const db = await getDatabase();
     const collection = db.collection<BlogsType>('blogs');
     const blogId = parseInt(id, 10);
@@ -158,7 +160,13 @@ export async function GET(
           {
             ...blog,
             _id: blog._id?.toString(),
-            blocks: blog.notionId ? await getPageBlocks(blog.notionId) : blog.blocks,
+            title: lang === 'en' ? blog.titleEn || blog.title : blog.title,
+            blocks:
+              lang === 'en'
+                ? blog.blocksEn || blog.blocks
+                : live && blog.notionId
+                  ? await getPageBlocks(blog.notionId)
+                  : blog.blocks,
           },
         ]
       : [];
