@@ -12,7 +12,6 @@ import { ProjectTypes } from 'type/projects';
 
 export default function Projects() {
   const [lang, setLang] = useState<'zh' | 'en' | null>(null);
-
   const currentLang = lang ?? 'zh';
   const { cache } = useSWRConfig();
   const key = lang ? `/api/projects?lang=${lang}` : null;

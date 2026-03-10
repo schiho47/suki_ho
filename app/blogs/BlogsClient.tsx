@@ -102,7 +102,6 @@ export default function BlogsClient() {
           : 'zh';
     setLang(nextLang);
   }, [searchParams]);
-
   useEffect(() => {
     if (typeof window === 'undefined' || !lang) return;
     window.localStorage.setItem('lang', lang);
