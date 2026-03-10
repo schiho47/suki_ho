@@ -10,16 +10,9 @@ interface NavbarProp {
 }
 
 const Navbar: React.FC<NavbarProp> = ({ path }) => {
-  const [showDropDown, setShowDropDown] = useState({ display: 'none' });
+ 
   const [isOpen, setIsOpen] = useState(false);
-  const collapseRef = useRef<HTMLDivElement>(null);
-  const collapseInstance = useRef<Collapse | null>(null);
 
-  const toggleLanguage = () => {
-    setShowDropDown((prev) =>
-      prev.display === 'block' ? { display: 'none' } : { display: 'block' }
-    );
-  };
 
 
   const content = [

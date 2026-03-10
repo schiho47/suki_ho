@@ -23,8 +23,8 @@ const CodeBlog = ({ blog }: CodeBlogProps) => {
             return (
               <BlogCodeBlock
                 key={`code-${index}`}
-                code={block.content}
-                language={block.language}
+                code={block.content ?? ''}
+                language={block.language ?? ''}
               />
             );
             case 'image':
