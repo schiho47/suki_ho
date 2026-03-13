@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Info.module.scss';
+import Link from 'next/link';
 
 const Info = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -71,8 +72,13 @@ const Info = () => {
             'SASS',
             'JavaScript',
             'RWD',
+            'TypeScript',
             'React.js',
             'Next.js',
+            'React Native',
+            'Tailwind CSS',
+            'MongoDB',
+            'Node.js',
             'Git',
           ].map((skill) => (
             <span key={skill} className={`${styles.skillTag} card-body`}>
@@ -86,6 +92,8 @@ const Info = () => {
         <div className="card-body">
           <h3>CONTACT</h3>
           <p>- s.chiho47@gmail.com</p>
+          <p>- <Link href="https://www.linkedin.com/in/ssu-chi-ho-002a3b1b5/" target="_blank">LinkedIn</Link></p>
+          <p>- <Link href="https://drive.google.com/drive/folders/1Z1qdYKtggEl1QAEK4UTenwg-cqL2w3Cw?usp=sharing" target="_blank">CV</Link></p>
         </div>
       </div>
     </div>
