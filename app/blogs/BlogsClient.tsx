@@ -10,15 +10,21 @@ import { apiFetcher } from '@lib/apiFetcher';
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+const desiredOrder = ['NeetCode', 'MuayLang', 'Reading', 'Dissertation'];
+const pageSize = 5;
 
 export default function BlogsClient() {
   const [lang, setLang] = useState<'zh' | 'en' | null>(null);
   const [activeTag, setActiveTag] = useState<string>('All');
+  const [page, setPage] = useState(1);
   const searchParams = useSearchParams();
   const initialTag = searchParams.get('tag');
   const currentLang = lang ?? 'zh';
   const { cache } = useSWRConfig();
-  const key = lang ? `/api/blogs?lang=${lang}` : null;
+  const tagParam = activeTag !== 'All' ? `&tag=${encodeURIComponent(activeTag)}` : '';
+  const key = lang
+    ? `/api/blogs?lang=${lang}&page=${page}&limit=${pageSize}${tagParam}`
+    : null;
   const fallbackData = key ? cache.get(key) : undefined;
   const {
     data,
@@ -32,25 +38,28 @@ export default function BlogsClient() {
   });
   
 
+  const items = Array.isArray(data?.items) ? data.items : [];
+  const allTags = Array.isArray(data?.tags) ? data.tags : [];
+  const total = typeof data?.total === 'number' ? data.total : 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
   const tags = useMemo(() => {
-    if (!Array.isArray(data)) return ['All'];
-    const tagSet = new Set<string>();
-    data.forEach((blog: BlogsType) => {
-      if (Array.isArray(blog.tags)) {
-        blog.tags.forEach((tag) => tagSet.add(tag));
-      }
-    });
-    return ['All', ...Array.from(tagSet)];
-  }, [data]);
+    if (!Array.isArray(allTags) || allTags.length === 0) return ['All'];
+
+    const present = new Set(allTags);
+    const ordered = desiredOrder.filter((tag) => present.has(tag));
+    const rest = allTags.filter((tag) => !desiredOrder.includes(tag));
+    return ['All', ...ordered, ...rest];
+  }, [allTags]);
   
 
   const filteredBlogs = useMemo(() => {
-    if (!Array.isArray(data)) return [];
-    if (activeTag === 'All') return data;
-    return data.filter((blog: BlogsType) =>
+    if (!Array.isArray(items)) return [];
+    if (activeTag === 'All') return items;
+    return items.filter((blog: BlogsType) =>
       Array.isArray(blog.tags) ? blog.tags.includes(activeTag) : false
     );
-  }, [activeTag, data]);
+  }, [activeTag, items]);
 
   const renderDescription = (blog: BlogsType, tags: string[]) => {
     if (!blog.blocks || blog.blocks.length === 0) return '';
@@ -87,6 +96,7 @@ export default function BlogsClient() {
     const matched = tags.find((tag) => tag.toLowerCase() === lower);
     if (matched && matched !== activeTag) {
       setActiveTag(matched);
+      setPage(1);
     }
   }, [activeTag, initialTag, setActiveTag, tags]);
 
@@ -129,7 +139,7 @@ export default function BlogsClient() {
             </div>
           </div>
         )}
-        {lang && Array.isArray(data) && (
+        {lang && Array.isArray(items) && (
           <>
             <ul className={`nav nav-tabs mb-4 ${styles.tagsRow}`}>
               {tags.map((tag) => (
@@ -137,7 +147,10 @@ export default function BlogsClient() {
                   <button
                     type='button'
                     className={`nav-link ${activeTag === tag ? 'active' : ''}`}
-                    onClick={() => setActiveTag(tag)}
+                    onClick={() => {
+                      setActiveTag(tag);
+                      setPage(1);
+                    }}
                   >
                     {tag}
                   </button>
@@ -163,6 +176,57 @@ export default function BlogsClient() {
                   );
                 })}
             </div>
+            {totalPages > 1 && (
+              <nav
+                className='d-flex justify-content-center my-4'
+                aria-label='Blog pagination'
+              >
+                <ul className='pagination'>
+                  <li className={`page-item ${page === 1 ? 'disabled' : ''}`}>
+                    <button
+                      type='button'
+                      className='page-link border-0'
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      aria-label='Previous'
+                    >
+                      <span aria-hidden='true'>&laquo;</span>
+                    </button>
+                  </li>
+                  {Array.from({ length: totalPages }, (_, idx) => idx + 1).map(
+                    (pageNum) => (
+                      <li
+                        key={pageNum}
+                        className={`page-item ${
+                          pageNum === page ? 'active' : ''
+                        }`}
+                      >
+                        <button
+                          type='button'
+                          className='page-link'
+                          onClick={() => setPage(pageNum)}
+                        >
+                          {pageNum}
+                        </button>
+                      </li>
+                    )
+                  )}
+                  <li
+                    className={`page-item ${
+                      page === totalPages ? 'disabled' : ''
+                    }`}
+                  >
+                    <button
+                      type='button'
+                      className='page-link border-0'
+                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      aria-label='Next'
+                    >
+                      <span aria-hidden='true'>&raquo;</span>
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            )}
           </>
         )}
       </div>

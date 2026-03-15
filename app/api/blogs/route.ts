@@ -2,7 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDatabase } from '@lib/mongodb';
 import { BlogsType } from 'type/blogs';
 
-type Data = BlogsType[] | { error: string };
+type Data =
+  | {
+      items: BlogsType[];
+      tags: string[];
+      total: number;
+      page: number;
+      limit: number;
+    }
+  | { error: string };
 
 export const revalidate = 300;
 export const dynamic = 'force-dynamic';
@@ -10,15 +18,45 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     const lang = request.nextUrl.searchParams.get('lang') || 'zh';
+    const tag = request.nextUrl.searchParams.get('tag') || '';
+    const pageParam = Number(request.nextUrl.searchParams.get('page') || '1');
+    const limitParam = Number(request.nextUrl.searchParams.get('limit') || '5');
+    const page = Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1;
+    const limit =
+      Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 5;
+    const skip = (page - 1) * limit;
     const db = await getDatabase();
     const collection = db.collection<BlogsType>('blogs');
+    const filter = tag ? { tags: tag } : {};
 
-    const blogs = await collection
-      .find(
-        {},
-        { projection: { id: 1, tags: 1, title: 1, titleEn: 1, blocks: 1, blocksEn: 1, date: 1 } }
-      )
-      .toArray();
+    const [blogs, total, tagDocs] = await Promise.all([
+      collection
+        .find(
+          filter,
+          {
+            projection: {
+              id: 1,
+              tags: 1,
+              title: 1,
+              titleEn: 1,
+              blocks: 1,
+              blocksEn: 1,
+              date: 1,
+            },
+          }
+        )
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+      collection.countDocuments(filter),
+      collection
+        .aggregate<{ tag: string }>([
+          { $unwind: { path: '$tags', preserveNullAndEmptyArrays: false } },
+          { $group: { _id: '$tags' } },
+          { $project: { _id: 0, tag: '$_id' } },
+        ])
+        .toArray(),
+    ]);
 
     const blogsWithStringId = blogs.map((blog) => ({
       _id: blog._id?.toString(),
@@ -39,7 +77,13 @@ export async function GET(request: NextRequest) {
       date: blog.date ?? null,
     }));
 
-    return NextResponse.json(blogsWithStringId);
+    return NextResponse.json({
+      items: blogsWithStringId,
+      tags: tagDocs.map((doc) => doc.tag).filter(Boolean),
+      total,
+      page,
+      limit,
+    });
   } catch (err) {
     console.error('Error fetching blogs:', err);
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
