@@ -65,7 +65,13 @@ const Card: React.FC<CardProps> = ({
               )}
             </div>
             {description && (
-              <div className={`card-text ${styles.cardText}`}>{description}</div>
+              <div
+                className={`card-text ${styles.cardText} ${
+                  img ? styles.cardTextWithImage : ''
+                }`}
+              >
+                {description}
+              </div>
             )}
           </div>
         </div>

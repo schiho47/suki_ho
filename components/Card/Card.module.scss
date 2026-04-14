@@ -46,6 +46,16 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.6;
+  min-height: calc(1.6em * 3);
+}
+
+.cardTextWithImage {
+  display: block;
+  overflow: visible;
+  text-overflow: unset;
+  -webkit-line-clamp: unset;
+  min-height: 0;
 }
 
 .headerRow {
