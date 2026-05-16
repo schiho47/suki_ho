@@ -4,7 +4,7 @@ import Card from '@components/Card/Card';
 import Footer from '@components/Footer/Footer';
 import Navbar from '@components/Navbar/Navbar';
 import styles from '@styles/Blogs.module.scss';
-import { BlogsType } from 'type/blogs';
+import { BlogsType } from '@type/blogs';
 import useSWR, { useSWRConfig } from 'swr';
 import { apiFetcher } from '@lib/apiFetcher';
 import React, { useEffect, useMemo, useState } from 'react';

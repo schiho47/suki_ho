@@ -303,18 +303,6 @@ async function syncNotionToMongo() {
             }
           ]
         },
-        {
-          or: [
-            {
-              property: 'EN',
-              rich_text: { equals: 'no' }
-            },
-            {
-              property: 'EN',
-              rich_text: { equals: 'false' }
-            }
-          ]
-        }
       ]
     }
   };
@@ -362,13 +350,16 @@ async function syncNotionToMongo() {
       { upsert: true }
     );
 
-    // 標記 Notion EN 為 yes
+    // 標記 Notion EN 為 yes，isNew 為 false
     try {
       await notion.pages.update({
         page_id: notionId,
         properties: {
           EN: {
             rich_text: [{ text: { content: 'yes' } }]
+          },
+          isNew: {
+            rich_text: [{ text: { content: 'false' } }]
           }
         }
       });

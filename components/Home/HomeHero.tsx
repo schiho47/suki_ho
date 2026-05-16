@@ -71,7 +71,7 @@ const HomeHero = () => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const media = window.matchMedia('(max-width: 768px)');
+    const media = window.matchMedia('(max-width: 1024px)');
     const handleChange = () => setIsMobile(media.matches);
     handleChange();
     media.addEventListener('change', handleChange);
@@ -92,6 +92,7 @@ const HomeHero = () => {
   }, [isMobile]);
 
   const handleToggle = () => {
+    if (isMobile) return;
     const targets = [
       buddhaRef.current,
       vietnamRef.current,
@@ -159,9 +160,13 @@ const HomeHero = () => {
     ref: React.RefObject<HTMLHeadingElement>
   ) => (
     <Tag ref={ref} aria-label={text}>
-      {text.split('').map((char, index) => (
-        <span key={`${Tag}-${index}`} style={{ display: 'inline-block' }}>
-          {char === ' ' ? '\u00A0' : char}
+      {text.split(' ').map((word, index, arr) => (
+        <span
+          key={`${Tag}-${index}`}
+          style={{ display: 'inline-block', whiteSpace: 'nowrap' }}
+        >
+          {word}
+          {index < arr.length - 1 ? '\u00A0' : ''}
         </span>
       ))}
     </Tag>
@@ -312,23 +317,31 @@ const HomeHero = () => {
       </div>
       <div ref={textRef} className={styles.helloBox}>
         {isMobile ? (
-          <div className={styles.mobileCarousel}>
-            {[
-              homeContent.defaultText,
-              homeContent.photoOpenedText,
-              homeContent.developer,
-              homeContent.muayThai,
-              homeContent.heritage,
-              homeContent.architecture,
-              homeContent.devotion,
-            ].map((item, index) => (
-              <div key={index} className={styles.mobileSlide}>
-                <h1>{item.h1}</h1>
-                <h3>{item.h3}</h3>
-                <h5>{item.h5}</h5>
+          <>
+            <div className={styles.mobileCarousel}>
+              {[
+                homeContent.defaultText,
+                homeContent.photoOpenedText,
+                homeContent.developer,
+                homeContent.muayThai,
+                homeContent.heritage,
+                homeContent.architecture,
+                homeContent.devotion,
+              ].map((item, index) => (
+                <div key={index} className={styles.mobileSlide}>
+                  <h1>{item.h1}</h1>
+                  <h3>{item.h3}</h3>
+                  <h5>{item.h5}</h5>
+                </div>
+              ))}
+            </div>
+            <div className={styles.swipeHint}>
+              <span className={styles.swipeText}>Swipe to explore</span>
+              <div className={styles.swipeBar}>
+                <span className={styles.swipeBarActive} />
               </div>
-            ))}
-          </div>
+            </div>
+          </>
         ) : (
           <>
             <div className={styles.helloContent}>
