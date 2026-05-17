@@ -48,57 +48,66 @@ const Info = () => {
           <div className={`card ${styles.timelineCard}`}>
             <div className="card-body">
               <h3>EDUCATION</h3>
+              <p>- Tibame Frontend Developer Training Course Jan 2021 – Aug 2021</p>
               <p>
-                - Tibame Frontend Developer Training Course Jan 2021 – Aug 2021
+                - MA Postcolonial Culture &amp; Global Policy Goldsmiths, University of London Sep
+                2017 – Aug 2018
               </p>
-              <p>
-                - MA Postcolonial Culture &amp; Global Policy Goldsmiths,
-                University of London Sep 2017 – Aug 2018
-              </p>
-              <p>
-                - BA History National Taiwan University Sep 2014 – Jun 2017
-              </p>
+              <p>- BA History National Taiwan University Sep 2014 – Jun 2017</p>
             </div>
           </div>
         </li>
       </ul>
-  <div className={styles.contactContainer}>
-      <div className={`card ${styles.section}`}>
-        <h3 className={styles.sectionTitle}>SKILLS</h3>
-        <div className={styles.skillGrid}>
-          {[
-            'HTML',
-            'CSS',
-            'SASS',
-            'JavaScript',
-            'RWD',
-            'TypeScript',
-            'React.js',
-            'Next.js',
-            'React Native',
-            'Tailwind CSS',
-            'MongoDB',
-            'Node.js',
-            'Git',
-          ].map((skill) => (
-            <span key={skill} className={`${styles.skillTag} card-body`}>
-              {skill}
-            </span>
-          ))}
+      <div className={styles.contactContainer}>
+        <div className={`card ${styles.section}`}>
+          <h3 className={styles.sectionTitle}>SKILLS</h3>
+          <div className={styles.skillGrid}>
+            {[
+              'HTML',
+              'CSS',
+              'SASS',
+              'JavaScript',
+              'RWD',
+              'TypeScript',
+              'React.js',
+              'Next.js',
+              'React Native',
+              'Tailwind CSS',
+              'MongoDB',
+              'Node.js',
+              'Git',
+            ].map((skill) => (
+              <span key={skill} className={`${styles.skillTag} card-body`}>
+                {skill}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className={`card ${styles.contactCard}`}>
-        <div className="card-body">
-          <h3>CONTACT</h3>
-          <p>- s.chiho47@gmail.com</p>
-          <p>- <Link href="https://www.linkedin.com/in/ssu-chi-ho-002a3b1b5/" target="_blank">LinkedIn</Link></p>
-          <p>- <Link href="https://drive.google.com/drive/folders/1Z1qdYKtggEl1QAEK4UTenwg-cqL2w3Cw?usp=sharing" target="_blank">CV</Link></p>
+        <div className={`card ${styles.contactCard}`}>
+          <div className="card-body">
+            <h3>CONTACT</h3>
+            <p>- s.chiho47@gmail.com</p>
+            <p>
+              -{' '}
+              <Link href="https://www.linkedin.com/in/ssu-chi-ho-002a3b1b5/" target="_blank">
+                LinkedIn
+              </Link>
+            </p>
+            <p>
+              -{' '}
+              <Link
+                href="https://drive.google.com/drive/folders/1Z1qdYKtggEl1QAEK4UTenwg-cqL2w3Cw?usp=sharing"
+                target="_blank"
+              >
+                CV
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
-}
- 
+};
+
 export default Info;

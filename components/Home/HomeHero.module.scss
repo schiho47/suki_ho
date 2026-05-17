@@ -182,8 +182,6 @@
   padding: 10px;
   padding-left: 40px;
   border-radius: 10px;
-  // width: 50%;
-  // margin-top: 1.5rem;
   h1 {
     font-size: 52px;
     color: $primary-color;
@@ -206,6 +204,11 @@
     overflow-wrap: normal;
     hyphens: none;
   }
+}
+
+.animatedWord {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .helloContent {

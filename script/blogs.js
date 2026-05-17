@@ -28,8 +28,8 @@ const blogSchema = new mongoose.Schema({
       content: String,
       language: String,
       url: String,
-      caption: String
-    }
+      caption: String,
+    },
   ],
   blocksEn: [
     {
@@ -37,14 +37,13 @@ const blogSchema = new mongoose.Schema({
       content: String,
       language: String,
       url: String,
-      caption: String
-    }
+      caption: String,
+    },
   ],
-  updatedAt: Date
+  updatedAt: Date,
 });
 
 const Blog = mongoose.model('Blog', blogSchema);
-
 
 const imagesDir = path.resolve(__dirname, '../public/notion-images');
 
@@ -132,8 +131,7 @@ async function translateBlocks(blocks) {
     const content = translatedTexts[i];
     if (content !== undefined) {
       const base = translated[blockIndex];
-      const finalContent =
-        base.type === 'heading' ? capitalizeHeading(content) : content;
+      const finalContent = base.type === 'heading' ? capitalizeHeading(content) : content;
       translated[blockIndex] = { ...base, content: finalContent };
     }
   });
@@ -156,7 +154,7 @@ async function fetchAllBlocks(blockId) {
   do {
     const response = await notion.blocks.children.list({
       block_id: blockId,
-      start_cursor: cursor
+      start_cursor: cursor,
     });
     allResults.push(...response.results);
     cursor = response.has_more ? response.next_cursor : undefined;
@@ -175,60 +173,56 @@ async function getPageBlocks(pageId) {
     if (block.type === 'paragraph') {
       mapped = {
         type: 'text',
-        content: block.paragraph.rich_text.map(t => t.plain_text).join('')
+        content: block.paragraph.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'bulleted_list_item') {
       mapped = {
         type: 'text',
-        content: `• ${block.bulleted_list_item.rich_text.map(t => t.plain_text).join('')}`
+        content: `• ${block.bulleted_list_item.rich_text.map((t) => t.plain_text).join('')}`,
       };
     }
     if (block.type === 'numbered_list_item') {
       mapped = {
         type: 'text',
-        content: block.numbered_list_item.rich_text.map(t => t.plain_text).join('')
+        content: block.numbered_list_item.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'quote') {
       mapped = {
         type: 'text',
-        content: block.quote.rich_text.map(t => t.plain_text).join('')
+        content: block.quote.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'callout') {
       mapped = {
         type: 'text',
-        content: block.callout.rich_text.map(t => t.plain_text).join('')
+        content: block.callout.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'toggle') {
       mapped = {
         type: 'text',
-        content: block.toggle.rich_text.map(t => t.plain_text).join('')
+        content: block.toggle.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'code') {
       mapped = {
         type: 'code',
         language: block.code.language,
-        content: block.code.rich_text.map(t => t.plain_text).join('')
+        content: block.code.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type.startsWith('heading')) {
       mapped = {
         type: 'heading',
-        content: block[block.type].rich_text.map(t => t.plain_text).join('')
+        content: block[block.type].rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'image') {
       const imageUrl =
-        block.image.type === 'file'
-          ? block.image.file.url
-          : block.image.external.url;
-      const caption = block.image.caption
-        .map(t => t.plain_text)
-        .join('');
+        block.image.type === 'file' ? block.image.file.url : block.image.external.url;
+      const caption = block.image.caption.map((t) => t.plain_text).join('');
       let resolvedUrl = imageUrl;
 
       if (block.image.type === 'file' && imageUrl) {
@@ -240,7 +234,7 @@ async function getPageBlocks(pageId) {
       mapped = {
         type: 'image',
         url: resolvedUrl,
-        caption
+        caption,
       };
     }
 
@@ -264,13 +258,11 @@ async function syncNotionToMongo() {
 
   // --- 直接從搜尋結果抓取資料庫 ---
   const searchResponse = await notion.search({
-    filter: { property: 'object', value: 'data_source' }
+    filter: { property: 'object', value: 'data_source' },
   });
 
   // 找到標題叫做 "Blogs" 的那個資料庫
-  const targetDb = searchResponse.results.find(
-    db => db.title[0]?.plain_text === 'Blogs'
-  );
+  const targetDb = searchResponse.results.find((db) => db.title[0]?.plain_text === 'Blogs');
 
   if (!targetDb) {
     console.error('在 Notion 中找不到名為 Blogs 的資料庫！');
@@ -285,26 +277,26 @@ async function syncNotionToMongo() {
       and: [
         {
           property: 'status',
-          rich_text: { equals: 'Ready' }
+          rich_text: { equals: 'Ready' },
         },
         {
           or: [
             {
               property: 'isNew',
-              rich_text: { equals: 'true' }
+              rich_text: { equals: 'true' },
             },
             {
               property: 'isNew',
-              rich_text: { equals: 'yes' }
+              rich_text: { equals: 'yes' },
             },
             {
               property: 'isNew',
-              rich_text: { equals: 'True' }
-            }
-          ]
+              rich_text: { equals: 'True' },
+            },
+          ],
         },
-      ]
-    }
+      ],
+    },
   };
 
   const response = notion.databases?.query
@@ -315,15 +307,12 @@ async function syncNotionToMongo() {
 
   for (const page of response.results) {
     const titleParts = page.properties.title.title;
-    const date =
-      page.properties.date?.date?.start ||
-      page.properties.Date?.date?.start ||
-      null;
+    const date = page.properties.date?.date?.start || page.properties.Date?.date?.start || null;
     const title =
       (Array.isArray(titleParts)
         ? titleParts.map((item) => item?.plain_text || '').join('')
         : '') || 'Untitled';
-    const tags = page.properties.tags.rich_text[0].plain_text
+    const tags = page.properties.tags.rich_text[0].plain_text;
     const notionId = page.id;
 
     console.log(`Syncing: ${title}...`);
@@ -345,7 +334,7 @@ async function syncNotionToMongo() {
         blocks,
         blocksEn,
         date,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       { upsert: true }
     );
@@ -356,12 +345,12 @@ async function syncNotionToMongo() {
         page_id: notionId,
         properties: {
           EN: {
-            rich_text: [{ text: { content: 'yes' } }]
+            rich_text: [{ text: { content: 'yes' } }],
           },
           isNew: {
-            rich_text: [{ text: { content: 'false' } }]
-          }
-        }
+            rich_text: [{ text: { content: 'false' } }],
+          },
+        },
       });
     } catch (err) {
       console.error(`Failed to update EN flag for ${title}:`, err);

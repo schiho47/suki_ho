@@ -25,8 +25,8 @@ const blogSchema = new mongoose.Schema({
       content: String,
       language: String,
       url: String,
-      caption: String
-    }
+      caption: String,
+    },
   ],
   blocksEn: [
     {
@@ -34,10 +34,10 @@ const blogSchema = new mongoose.Schema({
       content: String,
       language: String,
       url: String,
-      caption: String
-    }
+      caption: String,
+    },
   ],
-  updatedAt: Date
+  updatedAt: Date,
 });
 
 const Blog = mongoose.model('Blog', blogSchema);
@@ -45,7 +45,6 @@ const Blog = mongoose.model('Blog', blogSchema);
 const imagesDir = path.resolve(__dirname, '../public/notion-images');
 const DISSERTATION_PDF_URL = process.env.DISSERTATION_PDF_URL || '';
 const pageMap = {
-  // '<notion_page_id_or_title>': { startPage: 1, endPage: 5 },
   '302b50079d2580cab480c1c5ff1192cd': { startPage: 2, endPage: 6 },
 };
 
@@ -111,7 +110,7 @@ async function fetchAllBlocks(blockId) {
   do {
     const response = await notion.blocks.children.list({
       block_id: blockId,
-      start_cursor: cursor
+      start_cursor: cursor,
     });
     allResults.push(...response.results);
     cursor = response.has_more ? response.next_cursor : undefined;
@@ -130,64 +129,56 @@ async function getPageBlocks(pageId) {
     if (block.type === 'paragraph') {
       mapped = {
         type: 'text',
-        content: block.paragraph.rich_text.map((t) => t.plain_text).join('')
+        content: block.paragraph.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'bulleted_list_item') {
       mapped = {
         type: 'text',
-        content: `• ${block.bulleted_list_item.rich_text
-          .map((t) => t.plain_text)
-          .join('')}`
+        content: `• ${block.bulleted_list_item.rich_text.map((t) => t.plain_text).join('')}`,
       };
     }
     if (block.type === 'numbered_list_item') {
       mapped = {
         type: 'text',
-        content: block.numbered_list_item.rich_text
-          .map((t) => t.plain_text)
-          .join('')
+        content: block.numbered_list_item.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'quote') {
       mapped = {
         type: 'text',
-        content: block.quote.rich_text.map((t) => t.plain_text).join('')
+        content: block.quote.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'callout') {
       mapped = {
         type: 'text',
-        content: block.callout.rich_text.map((t) => t.plain_text).join('')
+        content: block.callout.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'toggle') {
       mapped = {
         type: 'text',
-        content: block.toggle.rich_text.map((t) => t.plain_text).join('')
+        content: block.toggle.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'code') {
       mapped = {
         type: 'code',
         language: block.code.language,
-        content: block.code.rich_text.map((t) => t.plain_text).join('')
+        content: block.code.rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type.startsWith('heading')) {
       mapped = {
         type: 'heading',
-        content: block[block.type].rich_text.map((t) => t.plain_text).join('')
+        content: block[block.type].rich_text.map((t) => t.plain_text).join(''),
       };
     }
     if (block.type === 'image') {
       const imageUrl =
-        block.image.type === 'file'
-          ? block.image.file.url
-          : block.image.external.url;
-      const caption = block.image.caption
-        .map((t) => t.plain_text)
-        .join('');
+        block.image.type === 'file' ? block.image.file.url : block.image.external.url;
+      const caption = block.image.caption.map((t) => t.plain_text).join('');
       let resolvedUrl = imageUrl;
 
       if (block.image.type === 'file' && imageUrl) {
@@ -199,7 +190,7 @@ async function getPageBlocks(pageId) {
       mapped = {
         type: 'image',
         url: resolvedUrl,
-        caption
+        caption,
       };
     }
 
@@ -221,12 +212,10 @@ async function syncNotionToMongo() {
   console.log('Connected to MongoDB');
 
   const searchResponse = await notion.search({
-    filter: { property: 'object', value: 'data_source' }
+    filter: { property: 'object', value: 'data_source' },
   });
 
-  const targetDb = searchResponse.results.find(
-    (db) => db.title[0]?.plain_text === 'Blogs'
-  );
+  const targetDb = searchResponse.results.find((db) => db.title[0]?.plain_text === 'Blogs');
 
   if (!targetDb) {
     console.error('在 Notion 中找不到名為 Blogs 的資料庫！');
@@ -238,47 +227,44 @@ async function syncNotionToMongo() {
       and: [
         {
           property: 'status',
-          rich_text: { equals: 'Ready' }
+          rich_text: { equals: 'Ready' },
         },
         {
           or: [
             {
               property: 'isNew',
-              rich_text: { equals: 'true' }
+              rich_text: { equals: 'true' },
             },
             {
               property: 'isNew',
-              rich_text: { equals: 'yes' }
+              rich_text: { equals: 'yes' },
             },
             {
               property: 'isNew',
-              rich_text: { equals: 'True' }
-            }
-          ]
+              rich_text: { equals: 'True' },
+            },
+          ],
         },
         {
           property: 'EN',
-          rich_text: { equals: 'PDF' }
-        }
-      ]
-    }
+          rich_text: { equals: 'PDF' },
+        },
+      ],
+    },
   };
 
   const response = notion.databases?.query
     ? await notion.databases.query({ database_id: targetDb.id, ...queryPayload })
     : await notion.dataSources.query({
         data_source_id: targetDb.id,
-        ...queryPayload
+        ...queryPayload,
       });
 
   console.log(`準備同步 ${response.results.length} 篇文章...`);
 
   for (const page of response.results) {
     const titleParts = page.properties.title.title;
-    const date =
-      page.properties.date?.date?.start ||
-      page.properties.Date?.date?.start ||
-      null;
+    const date = page.properties.date?.date?.start || page.properties.Date?.date?.start || null;
     const title =
       (Array.isArray(titleParts)
         ? titleParts.map((item) => item?.plain_text || '').join('')
@@ -290,12 +276,8 @@ async function syncNotionToMongo() {
     const titleEn = await translateText(title);
     const pdfInfo = resolvePdfInfo({ notionId, title }) || {};
     const pdfUrl = pdfInfo.pdfUrl || DISSERTATION_PDF_URL;
-    const startPage = Number.isFinite(pdfInfo.startPage)
-      ? pdfInfo.startPage
-      : undefined;
-    const endPage = Number.isFinite(pdfInfo.endPage)
-      ? pdfInfo.endPage
-      : undefined;
+    const startPage = Number.isFinite(pdfInfo.startPage) ? pdfInfo.startPage : undefined;
+    const endPage = Number.isFinite(pdfInfo.endPage) ? pdfInfo.endPage : undefined;
 
     await Blog.findOneAndUpdate(
       { notionId },
@@ -308,7 +290,7 @@ async function syncNotionToMongo() {
         pdfUrl,
         startPage,
         endPage,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       { upsert: true }
     );
@@ -318,9 +300,9 @@ async function syncNotionToMongo() {
         page_id: notionId,
         properties: {
           EN: {
-            rich_text: [{ text: { content: 'yes' } }]
-          }
-        }
+            rich_text: [{ text: { content: 'yes' } }],
+          },
+        },
       });
     } catch (err) {
       console.error(`Failed to update EN flag for ${title}:`, err);

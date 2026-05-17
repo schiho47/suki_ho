@@ -7,4 +7,3 @@ type Data = {
 export async function GET() {
   return NextResponse.json({ name: 'John Doe' });
 }
-

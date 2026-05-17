@@ -71,8 +71,7 @@ export const blogs = [
       },
       {
         id: 6,
-        title:
-          'JavaScript Closure Use Case - Avoid memory leaks and improve performance',
+        title: 'JavaScript Closure Use Case - Avoid memory leaks and improve performance',
         link: 'https://www.linkedin.com/pulse/javascript-closure-use-case-avoid-memory-leaks-improve-sharma/',
       },
       {

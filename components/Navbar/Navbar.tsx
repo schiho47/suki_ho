@@ -10,54 +10,48 @@ interface NavbarProp {
 }
 
 const Navbar: React.FC<NavbarProp> = ({ path }) => {
- 
   const [isOpen, setIsOpen] = useState(false);
-
-
 
   const content = [
     { path: 'home', name: 'Home', href: '/' },
     { path: 'projects', name: 'Projects', href: '/projects' },
     { path: 'blogs', name: 'Blogs', href: '/blogs' },
-    // { path: "hobbies", name: "Hobbies", href: "/hobbies" },
   ];
 
   return (
     <nav
       className={`navbar navbar-expand-lg  position-fixed top-0 start-0  z-3  ${styles.container}`}
     >
-      <div className='container-fluid'>
-        <Link href='/' className='navbar-brand text-primary-color'>
-        <Image src='/images/logo.png' alt='logo' width={80} height={80} />
+      <div className="container-fluid">
+        <Link href="/" className="navbar-brand text-primary-color">
+          <Image src="/images/logo.png" alt="logo" width={80} height={80} />
           Suki Ho
         </Link>
         <button
-          className='navbar-toggler'
-          type='button'
-          data-bs-toggle='collapse'
-          data-bs-target='#navbarNavAltMarkup'
-          aria-controls='navbarNavAltMarkup'
-          aria-expanded='false'
-          aria-label='Toggle navigation'
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span className='navbar-toggler-icon'></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
         <div
           className={`collapse navbar-collapse ${styles.menu}`}
-          id='navbarNavAltMarkup'
-          data-bs-parent='.navbar'
+          id="navbarNavAltMarkup"
+          data-bs-parent=".navbar"
         >
-          <ul className='navbar-nav container-fluid'>
+          <ul className="navbar-nav container-fluid">
             {content.map((item) => {
               return (
-                <li className='nav-item' key={item.path}>
+                <li className="nav-item" key={item.path}>
                   <Link
                     href={item.href}
-                    className={`nav-link ${
-                      path === item.path ? styles.active : styles.inactive
-                    }`}
-                    aria-current='page'
+                    className={`nav-link ${path === item.path ? styles.active : styles.inactive}`}
+                    aria-current="page"
                   >
                     {item.name}
                   </Link>
@@ -66,7 +60,6 @@ const Navbar: React.FC<NavbarProp> = ({ path }) => {
             })}
           </ul>
         </div>
-       
       </div>
     </nav>
   );

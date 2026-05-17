@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+
+if ! command -v npm >/dev/null 2>&1; then
+  NVM_NPM=$(ls "$HOME"/.nvm/versions/node/*/bin/npm 2>/dev/null | tail -n 1)
+  if [ -n "$NVM_NPM" ]; then
+    export PATH="$(dirname "$NVM_NPM"):$PATH"
+  fi
+fi
+
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ -n "$REPO_ROOT" ]; then
+  cd "$REPO_ROOT" || exit 1
+fi
+
+npm run format
+npm run lint       # 修改這行，前提是你的 package.json 裡有 "lint": "next lint"
+./node_modules/.bin/stylelint "**/*.scss"
+npm test

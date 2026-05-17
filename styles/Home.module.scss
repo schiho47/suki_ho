@@ -15,7 +15,6 @@
 
   .hello {
     width: 50%;
-    // background-color: $primary-color;
     position: absolute;
 
     right: 0%;
@@ -23,12 +22,10 @@
     color: $primary-color;
     h1 {
       font-size: 68px;
-      // -webkit-text-stroke: 2px #a4a5aa;
     }
     h3 {
       font-size: 48px;
       color: $primary-gold;
-      // -webkit-text-stroke: 2px #a4a5aa;
     }
     h5 {
       font-size: 40px;
@@ -53,7 +50,6 @@
       height: 500px;
       border-radius: 10px;
       background-color: #cab09b;
-      // background-image: url('../public/images/code.png');
     }
     img {
       transform: translateY(10%);

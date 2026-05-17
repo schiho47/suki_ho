@@ -38,29 +38,20 @@ export default function Projects() {
     if (typeof window === 'undefined' || !lang) return;
     window.localStorage.setItem('lang', lang);
   }, [lang]);
-  
+
   return (
     <div>
       <Navbar path={'projects'} />
       <div className={styles.container}>
         <div className={styles.headerRow}>
           <h1>Projects</h1>
-          {/* <button
-            type='button'
-            className='btn btn-outline-secondary btn-sm'
-            onClick={() =>
-              setLang((prev) => (prev === 'zh' ? 'en' : 'zh'))
-            }
-          >
-            {currentLang === 'zh' ? 'EN' : 'TW'}
-          </button> */}
         </div>
         <hr />
         {error && <div>failed to load</div>}
         {isLoading && (
-          <div className='d-flex justify-content-center py-5'>
-            <div className='spinner-border text-primary' role='status'>
-              <span className='visually-hidden'>Loading...</span>
+          <div className="d-flex justify-content-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
             </div>
           </div>
         )}
@@ -75,13 +66,11 @@ export default function Projects() {
                   img={data.img}
                   link={data.link}
                   size={{ maxWidth: '600px', minHeight: '200px' }}
-                  linkDescription='查看'
-                  linkTarget='_blank'
+                  linkDescription="查看"
+                  linkTarget="_blank"
                   secondaryLink={data.internalLink}
-                  secondaryLinkDescription={
-                    currentLang === 'zh' ? '前往 Blogs' : 'Go to Blogs'
-                  }
-                  secondaryLinkTarget='_self'
+                  secondaryLinkDescription={currentLang === 'zh' ? '前往 Blogs' : 'Go to Blogs'}
+                  secondaryLinkTarget="_self"
                 />
               );
             })}
@@ -94,4 +83,3 @@ export default function Projects() {
     </div>
   );
 }
-

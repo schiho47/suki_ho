@@ -150,8 +150,8 @@ const HomeHero = () => {
       ? homeContent.defaultText
       : homeContent.photoOpenedText
     : expanded
-    ? hoverText ?? homeContent.photoOpenedText
-    : homeContent.defaultText;
+      ? (hoverText ?? homeContent.photoOpenedText)
+      : homeContent.defaultText;
   const isDefault = !isMobile && content === homeContent.defaultText;
 
   const renderAnimatedText = (
@@ -161,10 +161,7 @@ const HomeHero = () => {
   ) => (
     <Tag ref={ref} aria-label={text}>
       {text.split(' ').map((word, index, arr) => (
-        <span
-          key={`${Tag}-${index}`}
-          style={{ display: 'inline-block', whiteSpace: 'nowrap' }}
-        >
+        <span key={`${Tag}-${index}`} className={styles.animatedWord}>
           {word}
           {index < arr.length - 1 ? '\u00A0' : ''}
         </span>
@@ -222,37 +219,36 @@ const HomeHero = () => {
         }`}
         onClick={handleToggle}
       >
-        
-      <div
-        ref={muayThaiRef}
-        onMouseEnter={() => handleMouseEnter('muayThai')}
-        onMouseLeave={handleMouseLeave}
-      >
-        <Image
-          src={'/images/home/muayThai.jpg'}
-          width={360}
-          height={480}
-          className={styles.muayThai}
-          loading='eager'
-          alt={'Suki Ho Muay Thai'}
-          onLoad={() => handleImageLoaded('muayThai')}
-        />
-      </div>
-      <div
-        ref={buddhaRef}
-        onMouseEnter={() => handleMouseEnter('devotion')}
-        onMouseLeave={handleMouseLeave}
-      >
-        <Image
-          src={'/images/home/buddha.jpg'}
-          width={220}
-          height={320}
-          className={styles.buddha}
-          loading='eager'
-          alt={'Buddha'}
-          onLoad={() => handleImageLoaded('buddha')}
-        />
-      </div>
+        <div
+          ref={muayThaiRef}
+          onMouseEnter={() => handleMouseEnter('muayThai')}
+          onMouseLeave={handleMouseLeave}
+        >
+          <Image
+            src={'/images/home/muayThai.jpg'}
+            width={360}
+            height={480}
+            className={styles.muayThai}
+            loading="eager"
+            alt={'Suki Ho Muay Thai'}
+            onLoad={() => handleImageLoaded('muayThai')}
+          />
+        </div>
+        <div
+          ref={buddhaRef}
+          onMouseEnter={() => handleMouseEnter('devotion')}
+          onMouseLeave={handleMouseLeave}
+        >
+          <Image
+            src={'/images/home/buddha.jpg'}
+            width={220}
+            height={320}
+            className={styles.buddha}
+            loading="eager"
+            alt={'Buddha'}
+            onLoad={() => handleImageLoaded('buddha')}
+          />
+        </div>
         <div
           ref={vietnamRef}
           onMouseEnter={() => handleMouseEnter('heritage')}
@@ -263,7 +259,7 @@ const HomeHero = () => {
             width={300}
             height={400}
             className={styles.vietnam}
-            loading='eager'
+            loading="eager"
             alt={'Suki Ho Vietnam'}
             onLoad={() => handleImageLoaded('vietnam')}
           />
@@ -278,7 +274,7 @@ const HomeHero = () => {
             width={260}
             height={320}
             className={styles.temple}
-            loading='eager'
+            loading="eager"
             alt={'Suki Ho Temple'}
             onLoad={() => handleImageLoaded('temple')}
           />
@@ -293,22 +289,19 @@ const HomeHero = () => {
             width={230}
             height={380}
             className={styles.me}
-            loading='eager'
+            loading="eager"
             alt={'Suki Ho Developer'}
             onLoad={() => handleImageLoaded('me')}
           />
         </div>
-        <div
-          onMouseEnter={() => handleMouseEnter('')}
-          onMouseLeave={handleMouseLeave}
-        >
+        <div onMouseEnter={() => handleMouseEnter('')} onMouseLeave={handleMouseLeave}>
           <Image
             id="suki_ho"
             src={'/images/home/suki_ho.png'}
             width={550}
             height={550}
             className={styles.image}
-            loading='eager'
+            loading="eager"
             alt={'Suki Ho'}
             priority={true}
             onLoad={() => handleImageLoaded('suki_ho')}
@@ -362,9 +355,9 @@ const HomeHero = () => {
               </div>
               {!expanded && !isMobile && (
                 <Image
-                  src='/images/logo.png'
+                  src="/images/logo.png"
                   className={styles.helloLogo}
-                  alt='logo'
+                  alt="logo"
                   width={250}
                   height={250}
                 />

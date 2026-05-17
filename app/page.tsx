@@ -7,12 +7,12 @@ import HomeHero from '@components/Home/HomeHero';
 export default function Home() {
   return (
     <>
-      <Navbar path='home' />
+      <Navbar path="home" />
 
       <div className={styles.container}>
         <main>
           <div className={styles.main}>
-          <HomeHero />
+            <HomeHero />
           </div>
           <Info />
         </main>
@@ -23,4 +23,3 @@ export default function Home() {
     </>
   );
 }
-

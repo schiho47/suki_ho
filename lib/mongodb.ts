@@ -7,7 +7,7 @@ let clientPromise: Promise<MongoClient>;
 
 function getClientPromise(): Promise<MongoClient> {
   const uri = process.env.MONGODB_URI;
-  
+
   if (!uri) {
     throw new Error('Please add your Mongo URI to .env.local');
   }
@@ -43,4 +43,3 @@ export async function getDatabase(): Promise<Db> {
   const dbName = process.env.MONGODB_DB || 'projects';
   return client.db(dbName);
 }
-

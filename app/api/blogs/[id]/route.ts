@@ -20,7 +20,7 @@ async function fetchAllBlocks(blockId: string) {
       start_cursor: cursor,
     });
     allResults.push(...response.results);
-    cursor = response.has_more ? response.next_cursor ?? undefined : undefined;
+    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
   } while (cursor);
 
   return allResults;
@@ -37,9 +37,7 @@ async function getPageBlocks(pageId: string) {
     if (blockAny.type === 'paragraph') {
       mapped = {
         type: 'text',
-        content: blockAny.paragraph.rich_text
-          .map((t: any) => t.plain_text)
-          .join(''),
+        content: blockAny.paragraph.rich_text.map((t: any) => t.plain_text).join(''),
       };
     }
     if (blockAny.type === 'bulleted_list_item') {
@@ -53,60 +51,44 @@ async function getPageBlocks(pageId: string) {
     if (blockAny.type === 'numbered_list_item') {
       mapped = {
         type: 'text',
-        content: blockAny.numbered_list_item.rich_text
-          .map((t: any) => t.plain_text)
-          .join(''),
+        content: blockAny.numbered_list_item.rich_text.map((t: any) => t.plain_text).join(''),
       };
     }
     if (blockAny.type === 'quote') {
       mapped = {
         type: 'text',
-        content: blockAny.quote.rich_text
-          .map((t: any) => t.plain_text)
-          .join(''),
+        content: blockAny.quote.rich_text.map((t: any) => t.plain_text).join(''),
       };
     }
     if (blockAny.type === 'callout') {
       mapped = {
         type: 'text',
-        content: blockAny.callout.rich_text
-          .map((t: any) => t.plain_text)
-          .join(''),
+        content: blockAny.callout.rich_text.map((t: any) => t.plain_text).join(''),
       };
     }
     if (blockAny.type === 'toggle') {
       mapped = {
         type: 'text',
-        content: blockAny.toggle.rich_text
-          .map((t: any) => t.plain_text)
-          .join(''),
+        content: blockAny.toggle.rich_text.map((t: any) => t.plain_text).join(''),
       };
     }
     if (blockAny.type === 'code') {
       mapped = {
         type: 'code',
         language: blockAny.code.language,
-        content: blockAny.code.rich_text
-          .map((t: any) => t.plain_text)
-          .join(''),
+        content: blockAny.code.rich_text.map((t: any) => t.plain_text).join(''),
       };
     }
     if (blockAny.type?.startsWith('heading')) {
       mapped = {
         type: 'heading',
-        content: blockAny[blockAny.type].rich_text
-          .map((t: any) => t.plain_text)
-          .join(''),
+        content: blockAny[blockAny.type].rich_text.map((t: any) => t.plain_text).join(''),
       };
     }
     if (blockAny.type === 'image') {
       const imageUrl =
-        blockAny.image.type === 'file'
-          ? blockAny.image.file.url
-          : blockAny.image.external.url;
-      const caption = blockAny.image.caption
-        .map((t: any) => t.plain_text)
-        .join('');
+        blockAny.image.type === 'file' ? blockAny.image.file.url : blockAny.image.external.url;
+      const caption = blockAny.image.caption.map((t: any) => t.plain_text).join('');
       mapped = {
         type: 'image',
         url: imageUrl,
@@ -127,10 +109,7 @@ async function getPageBlocks(pageId: string) {
   return blocks;
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const lang = request.nextUrl.searchParams.get('lang') || 'zh';
@@ -184,4 +163,3 @@ export async function GET(
     );
   }
 }
-

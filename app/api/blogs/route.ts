@@ -22,8 +22,7 @@ export async function GET(request: NextRequest) {
     const pageParam = Number(request.nextUrl.searchParams.get('page') || '1');
     const limitParam = Number(request.nextUrl.searchParams.get('limit') || '5');
     const page = Number.isFinite(pageParam) && pageParam > 0 ? pageParam : 1;
-    const limit =
-      Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 5;
+    const limit = Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 5;
     const skip = (page - 1) * limit;
     const db = await getDatabase();
     const collection = db.collection<BlogsType>('blogs');
@@ -31,26 +30,25 @@ export async function GET(request: NextRequest) {
 
     const [blogs, total, tagDocs] = await Promise.all([
       collection
-        .find(
-          filter,
-          {
-            projection: {
-              id: 1,
-              tags: 1,
-              title: 1,
-              titleEn: 1,
-              blocks: 1,
-              blocksEn: 1,
-              date: 1,
-            },
-          }
-        )
+        .find(filter, {
+          projection: {
+            id: 1,
+            tags: 1,
+            title: 1,
+            titleEn: 1,
+            blocks: 1,
+            blocksEn: 1,
+            date: 1,
+          },
+        })
         .skip(skip)
         .limit(limit)
         .toArray(),
       collection.countDocuments(filter),
       collection
-        .aggregate<{ tag: string }>([
+        .aggregate<{
+          tag: string;
+        }>([
           { $unwind: { path: '$tags', preserveNullAndEmptyArrays: false } },
           { $group: { _id: '$tags' } },
           { $project: { _id: 0, tag: '$_id' } },
@@ -96,4 +94,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
