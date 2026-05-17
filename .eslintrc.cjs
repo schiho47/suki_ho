@@ -1,14 +1,15 @@
 module.exports = {
   root: true,
   extends: ['next/core-web-vitals'],
-  plugins: ['no-inline-styles', 'no-commented-code'],
+  plugins: ['no-inline-styles', 'comment-cleaner'],
   rules: {
     'no-inline-styles/no-inline-styles': 'error',
-    'no-commented-code/no-commented-code': 'error',
+    'comment-cleaner/no-commented-code': 'error',
     'prefer-const': 'error',
     eqeqeq: 'error',
     'no-console': 'warn',
     '@next/next/no-html-link-for-pages': 'off',
+    '@next/next/no-img-element': 'off',
   },
   overrides: [
     {
@@ -20,7 +21,7 @@ module.exports = {
     {
       files: ['next-env.d.ts'],
       rules: {
-        'no-commented-code/no-commented-code': 'off',
+        'comment-cleaner/no-commented-code': 'off',
       },
     },
   ],

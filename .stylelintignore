@@ -1,3 +1,4 @@
 node_modules
 .next
 public/notion-images
+styles/tokens.scss
