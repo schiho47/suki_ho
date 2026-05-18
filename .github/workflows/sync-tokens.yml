@@ -1,11 +1,8 @@
 name: Sync Design Tokens
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [master]
-    paths:
-      - tokens/**
+  workflow_dispatch: # 允許你手動在 GitHub 網頁按 Run workflow 
+  # 如果未來想做到「設計師改 Figma 自動觸發」，這裡通常會改成 repository_dispatch
 
 jobs:
   sync:
@@ -16,6 +13,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # 防呆：確保 tokens 資料夾存在，避免 curl 因為找不到資料夾而失敗
+      - name: Ensure directory exists
+        run: mkdir -p tokens styles
 
       - name: Download tokens.json
         env:
@@ -41,12 +42,19 @@ jobs:
 
       - name: Commit changes
         run: |
-          if git diff --quiet; then
-            echo "No token changes."
+          # 檢查是否有任何檔案（包含新生成的）被改動
+          if git diff --quiet && git status --porcelain | grep -q '^\?'; then
+            echo "No token changes to commit."
             exit 0
           fi
+          
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tokens/tokens.json styles/tokens.scss
+          
+          # 自動追蹤所有相關變更
+          git add tokens/tokens.json
+          
+          git add styles/     
+          
           git commit -m "chore: sync design tokens"
           git push
