@@ -37,16 +37,13 @@ jobs:
         run: |
           echo "🔥 偵測到 CI_CD 分支上有 SCSS 檔案改動！啟動自動化對齊..."
           
-          # 建立必要的資料夾（根據結構，確認是寫入到 styles 還是 src/styles）
-          mkdir -p styles
+          mkdir -p tokens styles
           
-          # 呼叫 Figma API 抓取最新 Token
           curl -H "X-Figma-Token: $FIGMA_ACCESS_TOKEN" \
-            -o styles/tokens.json \
+            -o tokens/tokens.json \
             "https://api.figma.com/v1/files/$FIGMA_FILE_KEY/variables/local"
           
-          # 執行轉換工具將 JSON 轉成 SCSS 變數
-          npx style-dictionary build --config ./config.json || echo "Token 轉換跳過，改用備用編譯"
+          npm run tokens:build
 
       - name: Format
         run: npm run format || echo "Format 檢查跳過"
@@ -62,7 +59,7 @@ jobs:
       # ==========================================================
       - name: Commit & Push updated tokens
         run: |
-          if git diff --quiet styles/tokens.json; then
+          if git diff --quiet tokens/tokens.json styles/tokens.scss; then
             echo "Figma 端的數據沒有變更，跳過 Commit。"
             exit 0
           fi
@@ -70,6 +67,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          git add styles/tokens.json
+          git add tokens/tokens.json styles/tokens.scss
           git commit -m "chore: auto-sync figma tokens for CI_CD [skip ci]"
           git push origin HEAD:CI_CD

@@ -13,6 +13,7 @@ if [ -n "$REPO_ROOT" ]; then
   cd "$REPO_ROOT" || exit 1
 fi
 
+npm run tokens:build
 npm run format
 npm run lint       # 修改這行，前提是你的 package.json 裡有 "lint": "next lint"
 ./node_modules/.bin/stylelint "**/*.scss"

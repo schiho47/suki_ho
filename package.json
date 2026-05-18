@@ -10,6 +10,8 @@
     "lint:js": "eslint .",
     "lint:css": "stylelint \"**/*.scss\"",
     "tokens:build": "style-dictionary build --config tokens/style-dictionary.config.json",
+    "predev": "npm run tokens:build",
+    "prebuild": "npm run tokens:build",
     "format": "prettier --write .",
     "test": "jest --passWithNoTests",
     "prepare": "husky install"
