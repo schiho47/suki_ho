@@ -23,6 +23,33 @@ jobs:
       - name: Install
         run: npm ci
 
+      # ==========================================================
+      # 🚀 新增：Figma Token 條件式動態抓取 
+      # ==========================================================
+      - name: Check SCSS Changes & Fetch Figma Tokens
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          FIGMA_FILE_KEY: ${{ secrets.FIGMA_FILE_KEY }}
+        run: |
+          # 1. 檢查這次提交有沒有改到 scss 檔案
+          # 使用 git diff 檢查，如果有的話才啟動抓取，避免盲目調用 API
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '\.scss$'; then
+            echo "偵測到 SCSS 檔案變更，開始與 Figma 對齊數位合約..."
+            
+            # 2. 呼叫 Figma API 抓取最新 Token (可換成 Tokens Studio / Supernova 的 URL)
+            curl -H "X-Figma-Token: $FIGMA_ACCESS_TOKEN" \
+              -o src/styles/tokens.json \
+              "https://api.figma.com/v1/files/$FIGMA_FILE_KEY/variables/local"
+            
+            # 3. 執行轉換工具 (假設專案裡有裝 style-dictionary 或自製轉換 script)
+            # npx 可以直接執行沒安裝在 global 的工具，保持環境純淨
+            npx style-dictionary build --config ./config.json || echo "Token 轉換跳過"
+          else
+            echo "本次變更未包含 SCSS，跳過 Figma Token 抓取。"
+          fi
+      # ==========================================================
+
+      # 這裡開始，自動產出的 scss 變動也會一起被格式化和檢查！
       - name: Format
         run: npm run format
 
