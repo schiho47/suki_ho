@@ -391,16 +391,35 @@
   .buddha {
     display: none;
   }
+  .imageDiv {
+    padding: 6px;
+    margin-top: 18%;
+    .image {
+      transition: none;
+      transform: none;
+      max-width: 100%;
+      border-radius: 5px;
+      z-index: 1;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
 
-  .image {
-    transition: none;
-    transform: none;
-    max-width: 100%;
-    padding: 5px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    z-index: 1;
-    width: 100%;
-    height: auto;
+@media (min-width: 769px) and (max-width: 1024px) {
+  .imageStack,
+  .helloBox {
+    max-width: 720px;
+  }
+
+  .imageDiv {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .imageDiv {
+    padding: 10px;
+    margin-top: 24%;
   }
 }

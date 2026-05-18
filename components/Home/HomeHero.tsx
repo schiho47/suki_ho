@@ -301,6 +301,7 @@ const HomeHero = () => {
         <div
           onMouseEnter={() => handleMouseEnter('')}
           onMouseLeave={handleMouseLeave}
+          className={styles.imageDiv}
         >
           <Image
             id="suki_ho"
